@@ -1,0 +1,377 @@
+\documentclass[12pt,reqno]{amsart}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{forest}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 6.2}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item Using Figure 6.2 as a model, illustrate the operation of $\textsc{Max-Heapify}(A, 3)$ on the array $A = \langle 27, 17, 3, 16, 13, 10, 1, 5, 7, 12, 4, 8, 9, 0 \rangle$.
+
+\ifanswer
+\noindent {\bf Solution}
+We start from the tree representation of $A$:
+\begin{center}
+\begin{forest}
+    for tree={
+          circle,
+          draw,
+          fill=lightgray,
+          minimum size=1.2cm,
+          align=center,
+          edge+=-,
+          s sep=0.5cm,
+          l=1cm
+    }
+    [$27$
+        [$17$
+            [$16$
+                [$5$]
+                [$7$]
+            ]
+            [$13$
+                [$12$]
+                [$4$]
+            ]
+        ]
+        [$3$, fill=pink
+            [$10$
+                [$8$]
+                [$9$]
+            ]
+            [$1$
+                [$0$]
+                [, phantom]
+            ]
+        ]
+    ]
+\end{forest}
+\end{center}
+
+Since $A[3] = 3$, and its children $A[6] = 10$ and $A[7] = 1$, among which $A[6] = 10$ is the maximum, we exchange $A[3]$ with $A[6]$:
+\begin{center}
+    \begin{forest}
+        for tree={
+          circle,
+          draw,
+          fill=lightgray,
+          minimum size=1.2cm,
+          align=center,
+          edge+=-,
+          s sep=0.5cm,
+          l=1cm
+        }
+        [$27$
+            [$17$
+                [$16$
+                    [$5$]
+                    [$7$]
+                ]
+                [$13$
+                    [$12$]
+                    [$4$]
+                ]
+            ]
+            [$10$
+                [$3$, fill=pink
+                    [$8$]
+                    [$9$]
+                ]
+                [$1$
+                    [$0$]
+                    [, phantom]
+                ]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Similarly, since $A[6] = 3$, and its children $A[12] = 8$ and $A[13] = 9$, among which $A[13] = 9$ is the maximum, we exchange $A[6]$ with $A[13]$:
+\begin{center}
+    \begin{forest}
+        for tree={
+          circle,
+          draw,
+          fill=lightgray,
+          minimum size=1.2cm,
+          align=center,
+          edge+=-,
+          s sep=0.5cm,
+          l=1cm
+        }
+        [$27$
+            [$17$
+                [$16$
+                    [$5$]
+                    [$7$]
+                ]
+                [$13$
+                    [$12$]
+                    [$4$]
+                ]
+            ]
+            [$10$
+                [$9$
+                    [$8$]
+                    [$3$, fill=pink]
+                ]
+                [$1$
+                    [$0$]
+                    [, phantom]
+                ]
+            ]
+        ]
+    \end{forest}
+\end{center}
+Now, we finished the procedure of $\textsc{Max-Heapify}(A, 3)$.
+\vspace{1cm}
+
+
+
+\item Show that each child of the root of an $n$-node heap is the root of a subtree containing at most $2n/3$ nodes. What is the smallest constant $\alpha$ such that each subtree has at most $\alpha n$ nodes? How does that affect the recurrence (6.1) and its solution?
+
+\ifanswer
+\noindent {\bf Solution}
+\begin{enumerate}[(i)]
+\item Consider the case where the left subtree contains the highest proportion of nodes, that is, this left subtree contains all possible leaves of level $h = \lfloor \lg{n} \rfloor$, while the right subtree contains no leaves of level $h = \lfloor \lg{n} \rfloor$. In tree representation,
+\begin{center}
+    \begin{forest}
+        for tree={
+          circle,
+          draw,
+          fill=lightgray,
+          minimum size=0.6cm,
+          align=center,
+          edge+=-,
+          s sep=0.5cm,
+          l=1cm
+        }
+        [,
+          [,
+            [$\vdots$, draw=none, fill=none
+                [,
+                    [,]
+                    [,]
+                ]
+                [,
+                    [,]
+                    [,]
+                ]
+            ]
+            [$\vdots$, draw=none, fill=none
+                [,
+                    [,]
+                    [,]
+                ]
+                [,
+                    [,]
+                    [,]
+                ]
+            ]
+          ]
+          [,
+            [$\vdots$, draw=none, fill=none
+                [,]
+                [,]
+            ]
+            [$\vdots$, draw=none, fill=none
+                [,]
+                [,]
+            ]
+          ]
+        ]
+        \node at (7,0.6) {Level};
+        \node at (7,0) {0};
+        \node at (7,-1.2) {1};
+        \node at (7,-2.55) {\vdots};
+        \node at (7,-4.1) {h - 1};
+        \node at (7,-5.25) {h};
+    \end{forest}
+\end{center}
+The number of nodes of the whole heap is
+$$
+n = \sum_{i=0}^{h}{2^i} - 2^{h-1} = (2^{h+1} - 1) - 2^{h-1} = 3(2^{h-1} - 1/3).
+$$
+The number of nodes of the left subtree is
+$$
+n_l = \sum_{i=1}^{h}{2^{i-1}} = 2^{h} - 1 < 2(2^{h-1} - 1/3) = 2n/3.
+$$
+\item Every subtree of a heap must have a root other than the root of the heap. Therefore, it must be one of the left and right subtrees we discussed in (i), or a subtree of one of them. Therefore, every subtree has at most $2n/3$ nodes. Hence, $\alpha = 2/3$.
+\item The value of $\alpha$ in (ii) tells us why the coefficient of $n$ in recurrence (6.1) is $2/3$ (or, in other words, $b = 3/2$).
+
+\end{enumerate}
+\vspace{1cm}
+
+
+
+\item Starting with the procedure $\textsc{Max-Heapify}$, write pseudocode for the procedure $\textsc{Min}$-$\textsc{Heapify}(A, i)$, which performs the corresponding manipulation on a min-heap. How does the running time of $\textsc{Min-Heapify}$ compare with that of $\textsc{Max-Heapify}$?
+
+\ifanswer
+\noindent {\bf Solution}
+\begin{algorithm}
+\caption{\textsc{Min-Heapify}$(A, i)$}
+\begin{algorithmic}[1]
+%\REQUIRE A sorted array $A[1 \dots n]$ and a target value $x$
+%\ENSURE Index of $x$ in $A$, or -1 if not found
+\STATE $l = \textsc{Left}(i)$
+\STATE $r = \textsc{Right}(i)$
+\IF{$l \leq A.heap$-$size$ and $A[l] < A[i]$}
+    \STATE $smallest = l$
+\ELSE
+    \STATE $smallest = i$
+\ENDIF
+\IF{$r \leq A.heap$-$size$ and $A[r] < A[smallest]$}
+    \STATE $smallest = r$
+\ENDIF
+\IF{$smallest \neq i$}
+    \STATE exchange $A[i]$ with $A[smallest]$
+    \STATE \textsc{Max-Heapify}$(A, smallest)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+\\The running time of $\textsc{Min-Heapify}$ is the same as $\textsc{Max-Heapify}$ as they are essentially the same procedure except the order of elements are opposite.
+\vspace{1cm}
+
+
+
+\item What is the effect of calling $\textsc{Max-Heapify}$ when the element $A[i]$ is larger than its children?
+
+\ifanswer
+\noindent {\bf Solution}
+Nothing but your computer would still compare the value of $i$ with its children as programmed and decide there is no need to move $A[i]$ at the end.
+\vspace{1cm}
+
+
+
+\item What is the effect of calling $\textsc{Max-Heapify}$ for $i > A.heap$-$size/2$?
+
+\ifanswer
+\noindent {\bf Solution}
+For each $i > A.heap$-$size/2$, $i$ does not have a child, that is, $i$ is a leaf. Therefore, the variable $largest$ will be assigned the value $i$, and none of other if statements will be triggered. Therefore, nothing will happen to $A$.
+\vspace{1cm}
+
+
+
+\item The code for $\textsc{Max-Heapify}$ is quite efficient in terms of constant factors, except possibly for the recursive call in line 10, for which some compilers might produce inefficient code. Write an efficient $\textsc{Max-Heapify}$ that uses an iterative control construct (a loop) instead of recursion.
+
+\ifanswer
+\noindent {\bf Solution}
+\begin{algorithm}
+    \caption{\textsc{Max-Heapify}$(A, i)$}
+    \begin{algorithmic}[1]
+    \WHILE{True}
+        \STATE $l = \textsc{Left}(i)$
+        \STATE $r = \textsc{Right}(i)$
+        \IF{$l \leq A.heap$-$size$ and $A[l] > A[i]$}
+            \STATE $largest = l$
+        \ELSE
+            \STATE $largest = i$
+        \ENDIF
+        \IF{$r \leq A.heap$-$size$ and $A[r] > A[largest]$}
+            \STATE $largest = r$
+        \ENDIF
+        \IF{$largest = i$}
+            \STATE \textbf{break}
+        \ENDIF
+        \STATE exchange $A[i]$ with $A[largest]$
+        \STATE $i = largest$
+    \ENDWHILE
+    \end{algorithmic}
+\end{algorithm}
+\vspace{1cm}
+
+
+
+\item Show that the worst-case running time of $\textsc{Max-Heapify}$ on a heap of size $n$ is $\Omega(\lg{n})$. (\textit{Hint:} For a heap with $n$ nodes, give node values that cause $\textsc{Max-Heapify}$ to be called recursively at every node on a simple path from the root down to a leaf.)
+
+\ifanswer
+\noindent {\bf Solution}
+Exercise 6.1-2 tells us the height of a heap with $n$ nodes is $h = \lfloor \lg{n} \rfloor$. Consider the worst case where, in particular, the left most path consists of the $h+1$ largest elements that are in descending order (as shown in the graph below, assuming $a < a_0 < a_1 < \cdots < a_h$, where $a$ stands for any other elements in this heap).
+\begin{center}
+    \begin{forest}
+        for tree={
+          circle,
+          draw,
+          fill=lightgray,
+          minimum size=1.2cm,
+          align=center,
+          edge+=-,
+          s sep=0.3cm,
+          l=1cm
+        }
+        [$a_0$
+          [$a_1$
+            [$\vdots$, draw=none, fill=none
+                [$a_{h-1}$
+                    [$a_h$]
+                    [,]
+                ]
+                [,
+                    [,]
+                    [,]
+                ]
+            ]
+            [$\vdots$, draw=none, fill=none
+                [,
+                    [,]
+                    [, phantom]
+                ]
+                [,]
+            ]
+          ]
+          [,
+            [$\vdots$, draw=none, fill=none
+                [,]
+                [,]
+            ]
+            [$\vdots$, draw=none, fill=none
+                [,]
+                [,]
+            ]
+          ]
+        ]
+    \end{forest}
+\end{center}
+Therefore, if we call $\textsc{Max-Heapify}(A, 1)$, $a_1$ must be the largest element among $a_0$ and its children, and $\textsc{Max-Heapify}(A, 2)$ will be called as an iteration. Again, $a_2$ must be the largest among $a_1$ and its children, so $\textsc{Max-Heapify}(A, 4)$ will be called as an iteration. Repeat this process, the following iterations are $\textsc{Max-Heapify}(A, 8)$, $\textsc{Max-Heapify}(A, 16)$, $\dots$, $\textsc{Max-Heapify}(A, 2^{h-1})$, with at least $h = \lfloor \lg{n} \rfloor$ iterations in total, and with running time $\Theta(1)$ for each. Hence, the running time of $\textsc{Max-Heapify}$ is
+$$
+\Omega{\left(\lfloor\lg{n}\rfloor\Theta(1)\right)} = \Omega(\lfloor \lg{n} \rfloor) = \Omega(\lg{n}).
+$$
+\vspace{1cm}
+
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
