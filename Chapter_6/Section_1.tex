@@ -41,76 +41,95 @@
 \item Minimum: There is only one node at level $h$.
 \begin{center}
 \begin{forest}
-    for tree={grow=south, align=center, edge+=-}
-    [$a_1$
-        [$a_2$
-            [\vdots
-                [$a_{n-8}$
-                    [$a_n$]
+    for tree={
+      circle,
+      draw,
+      fill=lightgray,
+      minimum size=0.6cm,
+      align=center,
+      edge+=-,
+      s sep=0.5cm,
+      l=1cm
+    }
+    [,
+        [,
+            [\vdots, draw=none, fill=none
+                [,
+                    [,]
                     [, phantom]
                 ]
-                [$a_{n-7}$]
+                [,]
             ]
-            [\vdots
-                [$a_{n-6}$]
-                [$a_{n-5}$]
+            [\vdots, draw=none, fill=none
+                [,]
+                [,]
             ]
         ]
-        [$a_3$
-            [\vdots
-                [$a_{n-4}$]
-                [$a_{n-3}$]
+        [,
+            [\vdots, draw=none, fill=none
+                [,]
+                [,]
             ]
-            [\vdots
-                [$a_{n-2}$]
-                [$a_{n-1}$]
+            [\vdots, draw=none, fill=none
+                [,]
+                [,]
             ]
         ]
     ]
-    \node at (7,1) {Level};
-    \node at (7,0.1) {0};
-    \node at (7,-1.4) {1};
-    \node at (7,-2.85) {\vdots};
-    \node at (7,-4.55) {h - 1};
-    \node at (7,-6) {h};
+    \node at (7,0.6) {Level};
+    \node at (7,0) {0};
+    \node at (7,-1.2) {1};
+    \node at (7,-2.55) {\vdots};
+    \node at (7,-4.1) {h - 1};
+    \node at (7,-5.25) {h};
 \end{forest}
 \end{center}
 $$
 \textit{Minimum number of elements} = 1 + \sum_{i = 0}^{h-1}{2^i} = 2^h.
 $$
-\item Maximum: There are $2^h$, which is the maximally possible number of nodes, at level $h$.
+\item Maximum: There are $2^h$ nodes, which is the maximally possible number, at level $h$.
 \begin{center}
-\begin{forest}
-    for tree={grow=south, align=center, edge+=-}
-    [$a_1$
-        [$a_2$
-            [\vdots
-                [$a_{n-7}$]
-                [$a_{n-6}$]
+    \begin{forest}
+        for tree={
+          circle,
+          draw,
+          fill=lightgray,
+          minimum size=0.6cm,
+          align=center,
+          edge+=-,
+          s sep=0.5cm,
+          l=1cm
+        }
+        [,
+            [,
+                [\vdots, draw=none, fill=none
+                    [,]
+                    [,]
+                ]
+                [\vdots, draw=none, fill=none
+                    [,]
+                    [,]
+                ]
             ]
-            [\vdots
-                [$a_{n-5}$]
-                [$a_{n-4}$]
+            [,
+                [\vdots, draw=none, fill=none
+                    [,]
+                    [,]
+                ]
+                [\vdots, draw=none, fill=none
+                    [,]
+                    [,]
+                ]
             ]
         ]
-        [$a_3$
-            [\vdots
-                [$a_{n-3}$]
-                [$a_{n-2}$]
-            ]
-            [\vdots
-                [$a_{n-1}$]
-                [$a_{n}$]
-            ]
-        ]
-    ]
-    \node at (7,1) {Level};
-    \node at (7,0.1) {0};
-    \node at (7,-1.4) {1};
-    \node at (7,-2.85) {\vdots};
-    \node at (7,-4.55) {h};
+        \node at (7,0.6) {Level};
+        \node at (7,0) {0};
+        \node at (7,-1.2) {1};
+        \node at (7,-2.55) {\vdots};
+        \node at (7,-4.1) {h};
 \end{forest}
 \end{center}
+\vspace{0.5cm}
 $$
 \textit{Maximum number of elements} = \sum_{i = 0}^{h}{2^i} = 2^{h+1}-1.
 $$
