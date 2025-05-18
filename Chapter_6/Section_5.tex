@@ -1,0 +1,501 @@
+\documentclass[12pt,reqno]{amsart}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 6.5}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item Suppose that the objects in a max-priority queue are just keys. Illustrate the operation of $\textsc{Max-Heap-Extract-Max}$ on the heap $A=\langle 15, 13, 9, 5, 12, 8, 7, 4, 0, 6, 2, 1 \rangle$.
+
+\ifanswer
+\noindent {\bf Solution}
+We start from the tree representation of $A$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$15$
+            [$13$
+                [$5$
+                    [$4$]
+                    [$0$]
+                ]
+                [$12$
+                    [$6$]
+                    [$2$]
+                ]
+            ]
+            [$9$
+                [$8$
+                    [$1$]
+                    [, phantom]
+                ]
+                [$7$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Line 1 stores $A[1] = 15$ in the variable $max$. Then, line 2 revalues $A[1]$ to the last element $A[A.heapsize]$, and line 3 deducts the size of $A$ by $1$ (you can see it as we remove the last element from $A$):
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$1$, fill=pink
+            [$13$
+                [$5$
+                    [$4$]
+                    [$0$]
+                ]
+                [$12$
+                    [$6$]
+                    [$2$]
+                ]
+            ]
+            [$9$
+                [$8$]
+                [$7$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+$\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 1$ with $A[2] = 13$, exchanges $A[2] = 1$ with $A[5] = 12$, and exchanges $A[5] = 1$ with $A[10] = 6$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$13$
+            [$12$
+                [$5$
+                    [$4$]
+                    [$0$]
+                ]
+                [$6$
+                    [$1$]
+                    [$2$]
+                ]
+            ]
+            [$9$
+                [$8$]
+                [$7$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+Finally, we get $max = 15$ returned and $A = \langle 13, 12, 9, 5, 6, 8, 7, 4, 0, 1, 2 \rangle$.
+\vspace{1cm}
+
+
+
+\item Suppose that the objects in a max-priority queue are just keys. Illustrate the operation of $\textsc{Max-Heap-Insert}(A, 10)$ on the heap $A=\langle 15, 13, 9, 5, 12, 8, 7, 4, 0, 6, 2, 1 \rangle$.
+
+\ifanswer
+\noindent {\bf Solution}
+Line 3 will increase the size of $A$ by $1$ in order to store the extra element $x = 10$. Line 4 stores the value of $x$ in $k$, that is, $k = 10$, before setting $x$ to $-\infty$ and $A[A.heap-size] = x$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.3cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$15$
+            [$13$
+                [$5$
+                    [$4$]
+                    [$0$]
+                ]
+                [$12$
+                    [$6$]
+                    [$2$]
+                ]
+            ]
+            [$9$
+                [$8$
+                    [$1$]
+                    [\small $-\infty$]
+                ]
+                [$7$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Then, $\textsc{Max-Heap-Increase-Key}(A, x, k)$ is called. Since $k = 10 > -\infty = x$, there will not be error. Line 3 changes $x$ to $k = 10$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$15$
+            [$13$
+                [$5$
+                    [$4$]
+                    [$0$]
+                ]
+                [$12$
+                    [$6$]
+                    [$2$]
+                ]
+            ]
+            [$9$
+                [$8$
+                    [$1$]
+                    [$10$, fill=pink]
+                ]
+                [$7$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+We have $\textsc{Parent}(13) = 6$. Since $A[6] = 8 < 10 = A[13]$, exchange $A[13]$ with $A[6]$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$15$
+            [$13$
+                [$5$
+                    [$4$]
+                    [$0$]
+                ]
+                [$12$
+                    [$6$]
+                    [$2$]
+                ]
+            ]
+            [$9$
+                [$10$, fill=pink
+                    [$1$]
+                    [$8$]
+                ]
+                [$7$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+We have $\textsc{Parent}(6) = 3$. Since $A[3] = 9 < 10 = A[6]$, exchange $A[6]$ with $A[3]$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$15$
+            [$13$
+                [$5$
+                    [$4$]
+                    [$0$]
+                ]
+                [$12$
+                    [$6$]
+                    [$2$]
+                ]
+            ]
+            [$10$
+                [$9$
+                    [$1$]
+                    [$8$]
+                ]
+                [$7$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+We have $\textsc{Parent}(3) = 1$. Since $A[1] = 15 > 10 = A[3]$, we are done.
+\vspace{1cm}
+
+
+
+\item Write pseudocode to implement a min-priority queue with a min-heap by writing the procedures $\textsc{Min-Heap-Minimum}$, $\textsc{Min-Heap-Extract-Min}$, $\textsc{Min-Heap-Decrease-Key}$, and $\textsc{Min-Heap-Insert}$.
+
+\ifanswer
+\noindent {\bf Solution}
+\begin{algorithm}
+    \caption{$\textsc{Min-Heap-Minimum}(A)$}
+    \begin{algorithmic}[1]
+        \IF{$A.heap$-$size < 1$}
+            \STATE \textbf{error} "heap underflow"
+        \ENDIF
+        \RETURN $A[1]$
+    \end{algorithmic}
+\end{algorithm}
+\vspace{1cm}
+
+\begin{algorithm}
+    \caption{$\textsc{Min-Heap-Extract-Min}(A)$}
+    \begin{algorithmic}[1]
+        \STATE $min = \textsc{Min-Heap-Minimum}(A)$
+        \STATE $A[1] = A[A.heap$-$size]$
+        \STATE $A.heap$-$size = A.heap$-$size - 1$
+        \STATE $\textsc{Min-Heapify}(A, 1)$
+        \RETURN $min$
+    \end{algorithmic}
+\end{algorithm}
+\vspace{1cm}
+
+\begin{algorithm}
+    \caption{$\textsc{Min-Heap-Decrease-Key}(A, x, k)$}
+    \begin{algorithmic}[1]
+        \IF{$k > x.key$}
+            \STATE \textbf{error} "new key is larger than current key"
+        \ENDIF
+        \STATE $x.key = k$
+        \STATE find the index $i$ in array $A$ where object $x$ occurs
+        \WHILE{$i > 1$ and $A[\textsc{Parent}(i)].key > A[i].key$}
+            \STATE exchange $A[i]$ with $A[\textsc{Parent}(i)]$, updating the information that maps priority queue objects to array indices
+            \STATE $i = \textsc{Parent}(i)$
+        \ENDWHILE
+    \end{algorithmic}
+\end{algorithm}
+\newpage
+
+\begin{algorithm}
+    \caption{$\textsc{Min-Heap-Insert}(A, x, n)$}
+    \begin{algorithmic}[1]
+        \IF{$A.heap$-$size == n$}
+            \STATE \textbf{error} "heap overflow"
+        \ENDIF
+        \STATE $A.heap$-$size = A.heap$-$size + 1$
+        \STATE $k = x.key$
+        \STATE $x.key = \infty$
+        \STATE $A[A.heap$-$size] = x$
+        \STATE map $x$ to index $heap$-$size$ in the array
+        \STATE $\textsc{Min-Heap-Decrease-Key}(A, x, k)$
+    \end{algorithmic}
+\end{algorithm}
+\vspace{1cm}
+
+
+
+\item Write pseudocode for the procedure $\textsc{Max-Heap-Decrease-Key}(A, x, k)$ in a max-heap. What is the running time of your procedure?
+
+\ifanswer
+\noindent {\bf Solution}
+\begin{algorithm}
+    \caption{$\textsc{Max-Heap-Decrease-Key}(A, x, k)$}
+    \begin{algorithmic}[1]
+        \IF{$k > x.key$}
+            \STATE \textbf{error} "new key is larger than current key"
+        \ENDIF
+        \STATE $x.key = k$
+        \STATE find the index $i$ in array $A$ where object $x$ occurs
+        \STATE $\textsc{Max-Heapify}(A, i)$
+    \end{algorithmic}
+\end{algorithm}
+\\The running time of this procedure is a constant time plus the running time of $\textsc{Max}$-$\textsc{Heapify}(A, i)$, therefore, is $O(\lg{n})$.
+\vspace{1cm}
+
+
+
+\item Why does $\textsc{Max-Heap-Insert}$ bother setting the key of the inserted object to $-\infty$ in line 5 given that line 8 will set the object's key to the desired value?
+
+\ifanswer
+\noindent {\bf Solution}
+Line 8, that is, $\textsc{Max-Heap-Increase-Key}(A, x, k)$ requires $k$ is larger than $x.key$, the current key of $x$. By setting $x.key = -\infty$ in line 5, we can guarantee that $k > -\infty = x.key$.
+\vspace{1cm}
+
+
+
+\item Professor Uriah suggests replacing the \textbf{while} loop of lines 5-7 in $\textsc{Max-Heap-Increase}$-$\textsc{Key}$ by a call to $\textsc{Max-Heapify}$. Explain the flaw in the professor's idea.
+
+\ifanswer
+\noindent {\bf Solution}
+A call to $\textsc{Max-Heapify}(A, i)$ will do nothing to the array $A$ because the new key of $x$ is larger than the current one, and therefore it must still be larger than its children. What we are supposed to do is to put $x$ to a higher height (possibly no movement) because it received a larger key, and line 5-7 in $\textsc{Max-Heap-Increase-Key}$ did this work perfectly because it repeatedly exchanged $x$ with its parent while $x$ is larger, preserving the overall max-heap structure.
+\vspace{1cm}
+
+
+
+\item Argue the correctness of $\textsc{Max-Heap-Increase-Key}$ using the following loop invariant:\\
+At the start of each iteration of the $\textbf{while}$ loop of lines 5-7:
+\begin{enumerate}[a.]
+\item If both nodes $\textsc{Parent}(i)$ and $\textsc{Left}(i)$ exist, then $A[\textsc{Parent}(i)].key \geq A[\textsc{Left}(i)].key$.
+\item If both nodes $\textsc{Parent}(i)$ and $\textsc{Right}(i)$ exist, then $A[\textsc{Parent}(i)].key \geq A[\textsc{Right}(i)].key$.
+\item The subarray $A[1: A.heap$-$size]$ satisfies the max-heap property, except that there are may be one violation, which is that $A[i].key$ may be greater than $A[\textsc{Parent}(i)].key$.
+\end{enumerate}
+You may assume that the subarray $A[1: A.heap$-$size]$ satisfies the max-heap property at the time $\textsc{Max-Heap-Increase-Key}$ is called.
+
+\ifanswer
+\noindent {\bf Solution}
+\begin{enumerate}[a.]
+\item Since the input $A$ is a max-heap, $A[\textsc{Parent}(i)].key \geq A[i].key \geq A[\textsc{Left}(i)].key$.
+\item Similarly, $A[\textsc{Parent}(i)].key \geq A[i].key \geq A[\textsc{Right}(i)].key$.
+\item Since the input $A$ is a max-heap, $x.key$ is larger than its children. In line 3, the value of $x.key$ is increased, so it is still larger than its children. It is possible that $x.key$ becomes larger than its parent, which violates the max-heap property. No other node is affected because a max-heap only requires the relation between adjacent nodes.
+\end{enumerate}
+\vspace{1cm}
+
+
+
+\item Each exchange operation on line 6 of $\textsc{Max-Heap-Increase-Key}$ typically requires three assignments, not counting the updating of the mapping from objects to array indices. Show how to use the idea of the inner loop of $\textsc{Insertion-Sort}$ to reduce the three assignments to just one assignment.
+
+\ifanswer
+\noindent {\bf Solution}
+Instead of exchanging $A[i]$ with $A[\textsc{Parent}(i)]$ in every loop, we save a copy of $x$, $x\_copy$, before the loop, and just assign $A[\textsc{Parent}(i)]$ to $A[i]$ in each loop. This method keeps the correctness of every node except $A[i]$ after the last iteration, and we assign it with $x\_copy$. Also, in the condition of the $\textbf{while}$ loop, $A[i].key$ should be replaced by $x\_copy.key$. The following pseudocode shows this adjustment of the algorithm $\textsc{Max-Heap-Increase-Key}$ with only one assignment in each iteration of the \textbf{while} loop:
+\begin{algorithm}
+    \caption{$\textsc{Max-Heap-Increase-Key}(A, x, k)$}
+    \begin{algorithmic}[1]
+        \IF{$k > x.key$}
+            \STATE \textbf{error} "new key is smaller than current key"
+        \ENDIF
+        \STATE $x.key = k$
+        \STATE find the index $i$ in array $A$ where object $x$ occurs
+        \STATE $x\_copy = x$
+        \WHILE{$i > 1$ and $A[\textsc{Parent}(i)].key < x\_copy.key$}
+            \STATE Assign $A[\textsc{Parent}(i)]$ to $A[i]$, updating the information that maps priority queue objects to array indices
+            \STATE $i = \textsc{Parent}(i)$
+        \ENDWHILE
+        \STATE $A[i] = x\_copy$
+    \end{algorithmic}
+\end{algorithm}
+\vspace{1cm}
+\newpage
+
+
+\item Show how to implement a first-in, first-out queue with a priority queue. Show how to implement a stack with a priority queue. (Queues and stacks are defined in Section 10.1.3.)
+
+\ifanswer
+\noindent {\bf Solution}
+\textcolor{red}{Unfinished.}
+\vspace{1cm}
+
+
+
+\item The operation $\textsc{Max-Heap-Delete}(A, x)$ deletes the object $x$ from max-heap $A$. Give an implementation of $\textsc{Max-Heap-Delete}$ for an $n$-element max heap that runs in $O(\lg{n})$ time plus the overhead for mapping priority queue objects to array indices.
+
+\ifanswer
+\noindent {\bf Solution}
+The key idea is to find the index $i$ where $x$ occurs, assign $A[A.heap$-$size]$ to $A[i]$, remove $A[A.heap$-$size]$ by decreasing the $A.heap$-$size$ by 1, and finally call $\textsc{Max}$-$\textsc{Heapify}$ or $\textsc{Max-Heap-Increase-Key}$ to rebuild the max-heap. Below is the pseudocode:
+\begin{algorithm}
+    \caption{$\textsc{Max-Heap-Delete}(A, x)$}
+    \begin{algorithmic}[1]
+        \STATE find the index $i$ in array $A$ where object $x$ occurs
+        \STATE assign $A[A.heap$-$size]$ to $A[i]$, updating the information that maps priority queue objects to array indices
+        \STATE $A.heap$-$size = A.heap$-$size - 1$
+        \IF{$A[i] < A[\text{parent}(i)]$}
+            \STATE $\textsc{Max-Heapify}(A, i)$
+        \ELSE
+            \STATE $\textsc{Max-Heap-Increase-Key}(A, A[i], A[i].key)$
+        \ENDIF
+    \end{algorithmic}
+\end{algorithm}
+\\Since $\textsc{Max-Heapify}(A, i)$ costs time $O(\lg{n})$, the running time of $\textsc{Max-Heap-Delete}$ is $O(\lg{n})$ plus the overhead for mapping priority queue objects to array indices.
+\vspace{1cm}
+
+
+
+\item Give an $O(n\lg{k})$-time algorithm to merge $k$ sorted lists into one sorted list, where $n$ is the total number of elements in all the input lists. (\textit{Hint:} Use a min-heap for $k$-way merging.)
+
+\ifanswer
+\noindent {\bf Solution}
+First, we take the first elements of all the $k$ sorted lists, and call $\textsc{Build-Min-Heap}$ to build a max heap with these $k$ elements. Then, we repeatedly call $\textsc{Min-Heap-Extract}$-$\textsc{Min}$ (See Exercise 6.5-3) to collect the smallest element and put it to the sorted list, and call $\textsc{Min-Heap-Insert}$ (See Exercise 6.5-3) to insert the first element of the one among the $k$ lists that the smallest element collected belongs to. Below is the pseudocode:
+\begin{algorithm}
+    \caption{\textsc{Merge-Sorted-Lists}$(L, x)$}
+    \begin{algorithmic}[1]
+        \FOR{$i = 1$ to $k$}
+            \STATE $H[i] = L[i][1]$
+            \STATE $I[i] = 1$
+        \ENDFOR
+        \STATE $\textsc{Build-Min-Heap}(H, k)$
+        \FOR{$i = 1$ to $n$}
+            \STATE $A[i] = \textsc{Min-Heap-Extract-Min}(H)$
+            \STATE $H.heap$-$size = H.heap$-$size - 1$
+            \IF{$L[A[i].group].size - I[A[i].group] \geq 1$}
+                \STATE $new = L[A[i].group][I[A[i].group] + 1]$
+                \STATE $\textsc{Min-Heap-Insert}(H, new)$
+                \STATE $I[A[i].group] = I[A[i].group] + 1$
+            \ENDIF
+        \ENDFOR
+        \RETURN $A$
+    \end{algorithmic}
+\end{algorithm}
+\\In this pseudocode, $L$ is a list consisting of all the $k$ sorted lists. We equip each $x$ another attribute $x.group$, ranging from $1$ to $k$, which shows where in the $k$ lists $x$ is come from. In other words, $x$ is in $L[x.group]$. We denote $K.size$ as the number of elements in a list $K$.\\
+Now, let us compute the running time of our algorithm. The first \textbf{for} loop costs $O(k)$, followed by $\textsc{Build-Min-Heap}(H, k)$ costing $O(k)$. In each of the $n$ iterations of the second \textbf{for} loop, $\textsc{Min-Heap-Extract-Min}(H)$ costs $O(\lg{k})$. Inside the \textbf{if} statement, $\textsc{Min-Heap-Insert}(H, new)$ costs $O(\lg{k})$, and every other line costs constant time. The second \textbf{for} loop therefore costs $O(n\lg{k})$ in total. Hence, the running time of $\textsc{Merge}$-$\textsc{Sorted-Lists}$ is $O(k)$ + $O(k)$ + $O(n\lg{k}) = O(n\lg{k})$.
+\vspace{1cm}
+\end{enumerate}
+
+\end{document}
+
+
+
