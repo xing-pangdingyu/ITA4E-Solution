@@ -1,0 +1,604 @@
+\documentclass[12pt,reqno]{amsart}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 6.4}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item Using Figure 6.4 as a model, illustrate the operation of $\textsc{Heapsort}$ on the array $A=\langle 5, 13, 2, 25, 7, 17, 20, 8, 4 \rangle$.
+
+\ifanswer
+\noindent {\bf Solution}
+We apply heap sort in two steps. First, $\textsc{Build-Max-Heap}(A, n)$ is called to produce a max-heap. Next, we repeatedly call $\textsc{Max-Heapify}(A, 1)$ and put $A[1]$ to the right place.\\
+\begin{enumerate}[Step 1.]
+\item Build a max-heap. We start from the tree representation of $A$:\\
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$5$
+            [$13$
+                [$25$, fill=pink
+                    [$8$]
+                    [$4$]
+                ]
+                [$7$]
+            ]
+            [$2$
+                [$17$]
+                [$20$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+$\textsc{Max-Heapify}(A, 4)$ does not exchange nodes:\\
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$5$
+            [$13$
+                [$25$
+                    [$8$]
+                    [$4$]
+                ]
+                [$7$]
+            ]
+            [$2$, fill=pink
+                [$17$]
+                [$20$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+$\textsc{Max-Heapify}(A, 3)$ exchanges $A[3] = 2$ and $A[7] = 20$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$5$
+            [$13$, fill=pink
+                [$25$
+                    [$8$]
+                    [$4$]
+                ]
+                [$7$]
+            ]
+            [$20$
+                [$17$]
+                [$2$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+$\textsc{Max-Heapify}(A, 2)$ exchanges $A[2] = 13$ and $A[5] = 25$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$5$, fill=pink
+            [$25$
+                [$13$
+                    [$8$]
+                    [$4$]
+                ]
+                [$7$]
+            ]
+            [$20$
+                [$17$]
+                [$2$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+$\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 5$ and $A[2] = 25$, exchanges $A[2] = 5$ and $A[4] = 13$, and exchanges $A[4] = 5$ and $A[8] = 8$:\\
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$25$
+            [$13$
+                [$8$
+                    [$5$]
+                    [$4$]
+                ]
+                [$7$]
+            ]
+            [$20$
+                [$17$]
+                [$2$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+Now we have got a max-heap.\\
+
+\item Start sorting! Exchange $A[1] = 25$ with $A[9] = 4$; $\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 4$ and $A[3] = 20$, and exchanges $A[3] = 4$ with $A[6] = 17$:\\
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.15cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$20$
+            [$13$
+                [$8$
+                    [$5$]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$7$]
+            ]
+            [$17$
+                [$4$]
+                [$2$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Exchange $A[1] = 20$ with $A[8] = 5$; $\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 5$ and $A[3] = 17$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.1cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$17$
+            [$13$
+                [$8$
+                    [$20$, no edge, fill=cyan]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$7$]
+            ]
+            [$5$
+                [$4$]
+                [$2$]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Exchange $A[1] = 17$ with $A[7] = 2$; $\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 2$ and $A[2] = 13$, and exchanges $A[2] = 2$ and $A[4] = 8$:\\
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.1cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$13$
+            [$8$
+                [$3$
+                    [$20$, no edge, fill=cyan]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$7$]
+            ]
+            [$5$
+                [$4$]
+                [$17$, no edge, fill=cyan]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Exchange $A[1] = 13$ with $A[6] = 4$; $\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 4$ and $A[2] = 8$, and exchanges $A[2] = 4$ and $A[5] = 7$:\\
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.1cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$8$
+            [$7$
+                [$3$
+                    [$20$, no edge, fill=cyan]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$4$]
+            ]
+            [$5$
+                [$13$, no edge, fill=cyan]
+                [$17$, no edge, fill=cyan]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Exchange $A[1] = 8$ with $A[5] = 4$; $\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 4$ and $A[2] = 7$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.1cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$7$
+            [$4$
+                [$3$
+                    [$20$, no edge, fill=cyan]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$8$, no edge, fill=cyan]
+            ]
+            [$5$
+                [$13$, no edge, fill=cyan]
+                [$17$, no edge, fill=cyan]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Exchange $A[1] = 7$ with $A[4] = 3$; $\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 3$ and $A[3] = 5$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.15cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$5$
+            [$4$
+                [$7$, no edge, fill=cyan
+                    [$20$, no edge, fill=cyan]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$8$, no edge, fill=cyan]
+            ]
+            [$3$
+                [$13$, no edge, fill=cyan]
+                [$17$, no edge, fill=cyan]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Exchange $A[1] = 5$ with $A[3] = 3$; $\textsc{Max-Heapify}(A, 1)$ exchanges $A[1] = 3$ and $A[2] = 4$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$4$
+            [$3$
+                [$7$, no edge, fill=cyan
+                    [$20$, no edge, fill=cyan]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$8$, no edge, fill=cyan]
+            ]
+            [$5$, no edge, fill=cyan
+                [$13$, no edge, fill=cyan]
+                [$17$, no edge, fill=cyan]
+            ]
+        ]
+    \end{forest}
+\end{center}
+
+Exchange $A[1] = 4$ with $A[2] = 3$, and we are done!\\
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.2cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$3$
+            [$4$, no edge, fill=cyan
+                [$7$, no edge, fill=cyan
+                    [$20$, no edge, fill=cyan]
+                    [$25$, no edge, fill=cyan]
+                ]
+                [$8$, no edge, fill=cyan]
+            ]
+            [$5$, no edge, fill=cyan
+                [$13$, no edge, fill=cyan]
+                [$17$, no edge, fill=cyan]
+            ]
+        ]
+    \end{forest}
+\end{center}
+In array form, we get $A=\langle 3, 4, 5, 7, 8, 13, 17, 20, 25 \rangle$ sorted.
+\end{enumerate}
+\vspace{1cm}
+
+
+
+\item Argue the correctness of $\textsc{Heapsort}$ using the following loop invariant: At the start of each iteration of the $\textbf{for}$ loop of lines 2-5, the subarray $A[1:i]$ us a max-heap containing the $i$ smallest elements of $A[1:n]$, and the subarray $A[i+1:n]$ contains the $n-i$ largest elements of $A[1:n]$, sorted.
+
+\ifanswer
+\noindent {\bf Solution}
+We denote the loop variant as $P(i)$, where $i = n, n-1, \dots, 2$, and prove it by induction. At the start of the first iteration, $i = n$, the correctness of $P(n)$ is guaranteed by $\textsc{Build-Max-Heap}(A, n)$ before the loop.\\
+\indent Now, we assume $P(i)$ is true, and show $P(i - 1)$ is true. At the start of the loop where the loop index is $i$, by our assumption, the subarray $A[1: i]$ is a max-heap, thus $A[1]$ is the $n-i+1$ largest element in $A$. Exchanging $A[1]$ with $A[i]$, the subarray $A[i, n]$ contains the $n - i + 1$ largest elements of $A$. Now, we are left to show $A[1: i - 1]$ is again a max-heap after calling $\textsc{Max-Heapify}(A[1: i - 1], 1)$. To make our lives easier, we will use a silly proposition without proof: A heap is a max-heap if and only if the root is greater than both its children, and the subtrees rooted at these two children are max-heaps. After exchanging $A[1]$ and $A[i]$, the subtree $A[1: i - 1]$ is almost a max-heap (the subtrees rooted at $A[2]$ and $A[3]$ are both max-heaps, except possibly the root is smaller than its children): (The nodes that has been sorted, that is, $A[i: n]$, are not shown in the sample graph below.)
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.1cm,
+              align=center,
+              edge+=->,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$a_1$
+            [$a_2$, edge = {-}
+                [$a_4$
+                    [$a_8$]
+                    [$a_9$]
+                ]
+                [$a_5$
+                    [$a_{10}$]
+                    [$a_{11}$]
+                ]
+            ]
+            [$a_3$, edge = {-}
+                [$a_6$
+                    [$a_{12}$]
+                    [, phantom]
+                ]
+                [$a_7$]
+            ]
+        ]
+        \node at (-1.8,-0.65) {?};
+        \node at (1.8,-0.65) {?};
+        \node at (-4,-2.4) {$>$};
+        \node at (3.6,-2.4) {$>$};
+        \node at (-1.8,-2.4) {$>$};
+        \node at (2.3,-2.4) {$>$};
+        \node at (-5.3,-4.2) {$>$};
+        \node at (-3.9,-4.2) {$>$};
+        \node at (-1.9,-4.2) {$>$};
+        \node at (-0.6,-4.2) {$>$};
+        \node at (1.5,-4.2) {$>$};
+    \end{forest}
+\end{center}
+Since $\textsc{Max-Heapify}(A, 1)$ is called, without loss of generality, it exchanges $A[1]$ with $A[2]$. Now, we have $A[1] > A[2]$, $A[1] > A[3]$, and the subtree rooted at $A[3]$ is a max-heap:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.1cm,
+              align=center,
+              edge+=->,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$a_2$, fill=cyan
+            [$a_1$
+                [$a_4$, edge = {-}
+                    [$a_8$]
+                    [$a_9$]
+                ]
+                [$a_5$, edge = {-}
+                    [$a_{10}$]
+                    [$a_{11}$]
+                ]
+            ]
+            [$a_3$, fill=cyan
+                [$a_6$, fill=cyan
+                    [$a_{12}$, fill=cyan]
+                    [, phantom]
+                ]
+                [$a_7$, fill=cyan]
+            ]
+        ]
+        \node at (-1.8,-0.65) {$>$};
+        \node at (1.8,-0.65) {$>$};
+        \node at (-4,-2.4) {?};
+        \node at (3.6,-2.4) {$>$};
+        \node at (-1.8,-2.4) {?};
+        \node at (2.3,-2.4) {$>$};
+        \node at (-5.3,-4.2) {$>$};
+        \node at (-3.9,-4.2) {$>$};
+        \node at (-1.9,-4.2) {$>$};
+        \node at (-0.6,-4.2) {$>$};
+        \node at (1.5,-4.2) {$>$};
+    \end{forest}
+\end{center}
+The cyan part (except the root) is the subtree rooted at $A[3]$, and is a max-heap. The root $A[1] = a_2$ is also colored because it is larger than both its children. Now, if the subtree rooted at $A[2] = a_1$ is a max-heap, then we are done. This subtree, is almost a max-heap except possibly the root $A[2]$ is smaller than its children. Note that this is exactly the situation we met just now! Again, $\textsc{Max-Heapify}(A, 1)$ will compare $A[2]$ with its children, and exchange them when necessary. For example, it exchanges $A[2]$ with $A[5]$:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw,
+              fill=lightgray,
+              minimum size=1.1cm,
+              align=center,
+              edge+=->,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$a_2$, fill=cyan
+            [$a_5$, fill=cyan
+                [$a_4$, fill=cyan
+                    [$a_8$, fill=cyan]
+                    [$a_9$, fill=cyan]
+                ]
+                [$a_1$
+                    [$a_{10}$, edge = {-}]
+                    [$a_{11}$, edge = {-}]
+                ]
+            ]
+            [$a_3$, fill=cyan
+                [$a_6$, fill=cyan
+                    [$a_{12}$, fill=cyan]
+                    [, phantom]
+                ]
+                [$a_7$, fill=cyan]
+            ]
+        ]
+        \node at (-1.8,-0.65) {$>$};
+        \node at (1.8,-0.65) {$>$};
+        \node at (-4,-2.4) {$>$};
+        \node at (3.6,-2.4) {$>$};
+        \node at (-1.8,-2.4) {$>$};
+        \node at (2.3,-2.4) {$>$};
+        \node at (-5.3,-4.2) {$>$};
+        \node at (-3.9,-4.2) {$>$};
+        \node at (-1.9,-4.2) {?};
+        \node at (-0.6,-4.2) {?};
+        \node at (1.5,-4.2) {$>$};
+    \end{forest}
+\end{center}
+Everything is done except the subtree rooted at $A[5] = a_1$. Now, it should be clear that this procedure will repeat until the uncolored subtree is trivial (that is, with only one node), or it turns that its root is already larger than both its children. In either case, we are done to say it is a max-heap, and conclude $A[1: i - 1]$ is indeed a max-heap before the next loop.
+\vspace{1cm}
+
+
+
+\item What is the running time on $\textsc{Heapsort}$ on an array $A$ of length $n$ that is already sorted in increasing order? How about if the array is already sorted in decreasing order?
+
+\ifanswer
+\noindent {\bf Solution}
+\begin{enumerate}[(i)]
+\item If $A$ is sorted in increasing order, it is not good news for $\textsc{Build-Max-Heap}(A, n)$ (it is the worst, in fact) because every internal node is smaller than its children. We take the worst case running time $\Theta(n)$. The resulting max-heap, however, has no special structure to reduce the time complexity. The $\textbf{for}$ loop requires $\Theta{(n\lg{n})}$. The total running time is $\Theta{(n\lg{n})}$. (it is hard to analyze the actual structure of the max-heap produced in line $1$, one can see it as a corollary of Exercise 6.4.5.)
+\item If $A$ is sorted in decreasing order, $\textsc{Build-Max-Heap}(A, n)$ calls $\textsc{Max-Heapify}(A, i)$ $\Theta(n)$ times, where each takes only constant time. So, the running time of $\textsc{Build}$-$\textsc{Max-Heap}(A, n)$ is $\Theta(n)$, leaving $A$ unchanged. In each loop, $\textsc{Max-Heapify}(A, 1)$ has to repeated exchange the smallest element with its children all way down from the root to the leaf. In particular, the $\lceil n/2\rceil$ are of level $\lfloor\lg{n}\rfloor$ or $\lfloor\lg{n}\rfloor - 1$, therefore, $\textsc{Max-Heapify}(A, 1)$ makes at least $(\lceil n/2\rceil)(\lfloor\lg{n}\rfloor - 1) = \Omega(n\lg{n})$ exchanges. So, the total running time is $\Theta(n\lg{n})$.
+\end{enumerate}
+\vspace{1cm}
+
+
+
+\item Show that the worst-case running time of $\textsc{Heapsort}$ is $\Omega(n\lg{n})$.
+
+\ifanswer
+\noindent {\bf Solution}
+See Exercise 6.4-3 (ii).
+\vspace{1cm}
+
+
+
+\item Show that when all elements of $A$ are distinct, the best-case running time of $\textsc{Heapsort}$ is $\Omega(n\lg{n})$.
+
+\ifanswer
+\noindent {\bf Solution}
+It suffices to show the $\textbf{for}$ loop in $\textsc{Heapsort}$ takes best-case running time of $\Omega(n\lg{n})$. This is actually particularly hard and is waiting for a proof.
+\vspace{1cm}
+
+\end{enumerate}
+
+\end{document}
+
+
+
