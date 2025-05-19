@@ -1,0 +1,435 @@
+\documentclass[12pt,reqno]{amsart}
+%\documentclass[../Solutions_Introduction_to_Algorithms.tex]{subfiles}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest}
+\usepackage{tikz}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Problems in Chapter 6}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item \textbf{Building a heap using insertion}\\ One way to build a heap is by repeatedly calling $\textsc{Max-Heap-Insert}$ to insert the elements into the heap. Consider the procedure $\textsc{Build-Max-Heap'}$ on the facing page. It assumes that the objects being inserted are just the heap elements.
+\begin{algorithm}
+    \caption{$\textsc{Build-Max-Heap'}$}
+    \begin{algorithmic}[1]
+        \STATE $A.heap$-$size = 1$
+        \FOR{$i = 2$ to $n$}
+            \STATE $\textsc{Max-Heap-Insert}(A, A[i], n)$
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+\begin{enumerate}[a.]
+    \item Do the procedure $\textsc{Build-Max-Heap}$ and $\textsc{Build-Max-Heap'}$ always create the same heap when run on the same input array? Prove that they do, or provide a counterexample.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    No, they may create different max-heaps even when run on the same input array. Consider the array $A = \langle 1, 2, 3 \rangle$, that is, in tree representation,
+    \begin{center}
+        \begin{forest}
+            for tree={
+                  circle,
+                  draw,
+                  fill=lightgray,
+                  minimum size=1.2cm,
+                  align=center,
+                  edge+=-,
+                  s sep=0.5cm,
+                  l=1cm
+            }
+            [$1$
+                [$2$]
+                [$3$]
+            ]
+        \end{forest}
+    \end{center}
+    Calling $\textsc{Build-Max-Heap}(A)$ will do nothing but exchange $A[1]$ with $A[3]$, creating the max-heap $A = \langle 3, 2, 1 \rangle$:
+    \begin{center}
+        \begin{forest}
+            for tree={
+                  circle,
+                  draw,
+                  fill=lightgray,
+                  minimum size=1.2cm,
+                  align=center,
+                  edge+=-,
+                  s sep=0.5cm,
+                  l=1cm
+            }
+            [$3$
+                [$2$]
+                [$1$]
+            ]
+        \end{forest}
+    \end{center}
+    On the other hand, if we call $\textsc{Build-Max-Heap}(A)'$, the max-heap starts with only one element $A[1] = 1$:
+    \begin{center}
+        \begin{forest}
+            for tree={
+                  circle,
+                  draw,
+                  fill=lightgray,
+                  minimum size=1.2cm,
+                  align=center,
+                  edge+=-,
+                  s sep=0.5cm,
+                  l=1cm
+            }
+            [$1$]
+        \end{forest}
+    \end{center}
+    Then, $\textsc{Max-Heap-Insert}(A, A[2], n)$ inserts $A[2] = 2$ and put it to the right place:
+    \begin{center}
+        \begin{forest}
+            for tree={
+                  circle,
+                  draw,
+                  fill=lightgray,
+                  minimum size=1.2cm,
+                  align=center,
+                  edge+=-,
+                  s sep=0.5cm,
+                  l=1cm
+            }
+            [$2$, fill=pink
+                [$1$]
+                [, phantom]
+            ]
+        \end{forest}
+    \end{center}
+    Lastly, $\textsc{Max-Heap-Insert}(A, A[3], n)$ inserts $A[3] = 3$ and put it to the right place, resulting the max-heap $A = \langle 3, 1, 2 \rangle$:
+    \begin{center}
+        \begin{forest}
+            for tree={
+                  circle,
+                  draw,
+                  fill=lightgray,
+                  minimum size=1.2cm,
+                  align=center,
+                  edge+=-,
+                  s sep=0.5cm,
+                  l=1cm
+            }
+            [$3$, fill=pink
+                [$1$]
+                [$2$]
+            ]
+        \end{forest}
+    \end{center}
+    \item Show that in the worst case, $\textsc{Max-Heap-Insert'}$ requires $\Theta(n\lg{n})$ time to build an $n$-element heap.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    Consider the input array $A$ is in increasing order, that is, in each iteration of the \textbf{for} loop, $A[i]$ is larger than any element existing in the max-array. Therefore, there will be $\lfloor \lg{i} \rfloor$ exchanges in each iteration. The total number of exchanges is $\sum_{i = 2}^{n}{\lfloor \lg{i} \rfloor}$. We have
+    $$
+    \sum_{i = 2}^{n}{\lfloor \lg{i} \rfloor} \leq (n - 1)(\lfloor \lg{n} \rfloor) = O(n\lg{n}),
+    $$
+    and
+    \begin{align*}
+    \sum_{i = 2}^{n}{\lfloor \lg{i} \rfloor} &\geq \sum_{i = 2^{\lfloor \lg{n} \rfloor - 1}}^{n}{\lfloor \lg{i} \rfloor}\\
+    &\geq (n - 2^{\lfloor \lg{n} \rfloor - 1} + 1){\lfloor \lg{2^{\lfloor \lg{n} \rfloor - 1}} \rfloor}\\
+    &\geq \frac{n}{2}(\lfloor \lg{n} \rfloor - 1)\\
+    &= \Omega(n\lg{n}).
+    \end{align*}
+    Hence, the worst-case running case of $\textsc{Max-Heap-Insert'}$ is $\Theta(n\lg{n})$.
+\end{enumerate}
+\vspace{1cm}
+
+
+
+\item \textbf{Analysis of d-ary heaps}\\ A \textbf{d-ary heap} is like a binary heap, but (with one possible exception) nonleaf nodes have $d$ children instead of two children. In all parts of this problem, assume that the time to maintain the mapping between objects and heap elements is $O(1)$ per operation.
+\begin{enumerate}[a.]
+    \item Describe how to represent a $d$-ary heap in an array.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    Given a $d$-ary heap $A$ with $n$ nodes, let $A[1]$ be the root of $A$, and let $A[2]$ to $A[d + 1]$ be the children of $A[1]$ from left to right, let $A[d + 2]$ to $A[2d + 1]$ be the children of $A[2]$ from left to right, repeat this procedure until all nodes are added into the array $A$, which is then an array representation of a $d$-ary heap.
+
+    \item Using $\Theta$-notation, express th height of a $d$-ary heap of $n$ elements in terms of $n$ and $d$.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    Similar to Exercise 6.1.2, the height of a $d$-ary heap is $\Theta(\log_d{n})$.
+
+    \item Give an efficient implementation of $\textsc{Extract-Max}$ in a $d$-ary max-heap. Analyze its running time in terms of $d$ and $n$.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    Note that the children of $A[i]$ are indexed from $(n - 1)d + 2$ to $nd + 1$.
+    \begin{algorithm}
+        \caption{$\textsc{Max-Heap-Maximum}(A)$}
+        \begin{algorithmic}[1]
+            \IF{$A.heap$-$size < 1$}
+                \STATE \textbf{error} ``heap underflow"
+            \ENDIF
+            \RETURN $A[1]$
+        \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+        \caption{$\textsc{Max-Heapify}(A, d, i)$}
+        \begin{algorithmic}[1]
+            \STATE $largest = i$
+            \FOR{$j = (n - 1)d + 2$ to $nd + 1$}
+                \IF{$j \leq A.heap$-$size$ and $A[j] > A[largest]$}
+                    \STATE $largest = j$
+                \ENDIF
+            \ENDFOR
+            \IF{$largest \neq i$}
+                \STATE exchange $A[i]$ with $A[largest]$
+                \STATE $\textsc{Max-Heapify}(A, d, largest)$
+            \ENDIF
+        \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+        \caption{$\textsc{Extract-Max}(A, d)$}
+        \begin{algorithmic}[1]
+            \STATE $max = \textsc{Max-Heap-Maximum}(A)$
+            \STATE $A[1] = A[A.heap$-$size]$
+            \STATE $A[A.heap$-$size]$ = $A[A.heap$-$size]$ - 1
+            \STATE $\textsc{Max-Heapify}(A, d, 1)$
+            \RETURN $max$
+        \end{algorithmic}
+    \end{algorithm}
+    Every line in $\textsc{Extract-Max}(A)$ takes constant time except for line 4, where $\textsc{Max}$-$\textsc{Heapify}(A, i)$ is called. The \textbf{for} loop in lines 2-6 in $\textsc{Max-Heapify}(A, i)$ takes $O(d)$, and there are $O(\log_d{n})$ iterations for the recursion. Therefore, the running time of $\textsc{Max-Heapify}(A, i)$ is $O(d\log_d{n}$), so is the running time of $\textsc{Extract-Max}(A)$.
+    
+    \item Give an efficient implementation of $\textsc{Increase-Key}$ in a $d$-ary max-heap. Analyze its running time in terms of $d$ and $n$.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    Note that the parent of $A[i]$ is indexed $\lceil (i - 1)/d \rceil$.
+    \begin{algorithm}
+        \caption{$\textsc{Parent}(d, i)$}
+        \begin{algorithmic}[1]
+            \RETURN $\lceil (i - 1)/d \rceil$
+        \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+        \caption{$\textsc{Increase-Key}(A, d, x, k)$}
+        \begin{algorithmic}[1]
+            \IF{$k < x.key$}
+                \STATE \textbf{error} ``new key is smaller than current key''
+            \ENDIF
+            \STATE $x.key = k$
+            \STATE find the index $i$ in $A$ where object $x$ occurs
+            \WHILE{$i > 1$ and $A[\textsc{Parent}(d, i)].key < A[i].key$}
+                \STATE exchange $A[i]$ and $A[\textsc{Parent}(d, i)]$, updating the information that maps priority queue objects to array indices.
+                \STATE $i = \textsc{Parent}(d, i)$
+            \ENDWHILE
+        \end{algorithmic}
+    \end{algorithm}
+    The running time of $\textsc{Increase-Key}$ is $O(\log_d{n})$ because the path from $x$ to the root has length $O(\log_d{n})$.
+
+    \item Give an efficient implementation of $\textsc{Insert}$ in a $d$-ary max-heap. Analyze its running time in terms of $d$ and $n$.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    \begin{algorithm}
+        \caption{$\textsc{Insert}(A, d, x, n)$}
+        \begin{algorithmic}[1]
+            \IF{$A.heap$-$size == n$}
+            \STATE \textbf{error} "heap overflow"
+            \ENDIF
+            \STATE $A.heap$-$size = A.heap$-$size + 1$
+            \STATE $k = x.key$
+            \STATE $x.key = -\infty$
+            \STATE $A[A.heap$-$size] = x$
+            \STATE map $x$ to index $heap$-$size$ in the array
+            \STATE $\textsc{Increase-Key}(A, d, x, k)$
+        \end{algorithmic}
+    \end{algorithm}
+    \\The running time of $\textsc{Insert}$ equals the running time of $\textsc{Increase-Key}$ plus the time to map $x$ to index $heap$-$size$, which we assumed as $O(1)$. Hence, the running time of $\textsc{Insert}$ is $O(\log_d{n})$.
+\end{enumerate}
+\vspace{1cm}
+
+
+
+\item \textbf{Young tableaus}\\ An $m\times n$ \textbf{Young tableau} is an $m\times n$ matrix such that the entries of each row are in sorted order from left to right and the entries of each column are in sorted order from top to bottom. Some of the entries of a Young tableau may be $\infty$, which we treat as nonexistent elements. Thus, a Young tableau can be used to hold $r \leq mn$ finite numbers.
+\begin{enumerate}[a.]
+    \item Draw a $4\times 4$ Young tableau containing the elements $\{9, 16, 3, 2, 4, 8, 5, 14, 12\}$.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    $$
+    \begin{bmatrix}
+        2      & 3      & 5      & \infty\\
+        4      & 9      & 14     & \infty\\
+        8      & 12     & 16     & \infty\\
+        \infty & \infty & \infty & \infty\\
+    \end{bmatrix}
+    $$
+    \vspace{1cm}
+    \item Argue that an $m\times n$ Young tableau $Y$ is empty if $Y[1, 1] = \infty$. Argue that $Y$ is full (contains $mn$ elements) if $Y[m, n] < \infty$.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    It is easy to see that $Y[1, 1]$ is the smallest element in a Young tableau, while $Y[m, n]$ is the largest element in a Young tableau. Therefore, if $Y[1, 1] = \infty$, every entry must be $\infty$, that is, $Y$ is empty. On the other hand, if $Y[m, n] < \infty$ is finite, then every entry must also be finite, and therefore $Y$ is full.
+    \vspace{1cm}
+    \item Give an algorithm to implement $\textsc{Extract-Min}$ on a non-empty $m\times n$ Young tableau that runs in $O(m + n)$ time. Your algorithm should use a recursive subroutine that solves an $m\times n$ problem by recursively solving either an $(m - 1)\times n$ or an $m\times (n - 1)$ subproblem. (\textit{Hint:} Think about $\textsc{Max-Heapify}$.) Explain why your implementation of $\textsc{Extract-Min}$ runs in $O(m + n)$ time.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    \begin{algorithm}
+        \caption{$\textsc{Minimum}(Y)$}
+        \begin{algorithmic}[1]
+            \IF{$Y[1, 1] = \infty$}
+                \STATE \textbf{error} ``Young tableau underflow"
+            \ENDIF
+            \RETURN $Y[1, 1]$
+        \end{algorithmic}
+    \end{algorithm}
+    \newpage
+
+    \begin{algorithm}
+        \caption{$\textsc{Extract-Min-Recursion}(Y, m, n, i, j)$}
+        \begin{algorithmic}[1]
+            \IF{$i < m$ and $Y[i + 1, j] < Y[i, j]$}
+                \STATE $smallest = 1$
+            \ELSE
+                \STATE $smallest = 0$
+            \ENDIF
+            \IF{$j < n$ and $Y[i, j + 1] < Y[i, j]$}
+                \STATE $smallest = 2$
+            \ENDIF
+            \IF{$smallest = 0$}
+                \RETURN
+            \ENDIF
+            \IF{$smallest = 1$}
+                \STATE exchange $Y[i, j]$ with $Y[i + 1, j]$
+                \STATE $\textsc{Extract-Min-Recursion}(Y, m, n, i + 1, j)$
+            \ELSE
+                \STATE exchange $Y[i, j]$ with $Y[i, j + 1]$
+                \STATE $\textsc{Extract-Min-Recursion}(Y, m, n, i, j + 1)$
+            \ENDIF
+        \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+        \caption{$\textsc{Extract-Min}(Y, m, n)$}
+        \begin{algorithmic}[1]
+            \STATE $min = \textsc{Minimum}(Y)$
+            \STATE $Y[1, 1] = Y[m, n]$
+            \STATE $\textsc{Extract-Min-Recursion}(Y, m, n, 1, 1)$
+            \RETURN $min$
+        \end{algorithmic}
+    \end{algorithm}
+    In $\textsc{Extract-Min-Recursion}$, we reduce the $m\times n$ matrix to an $(m - 1)\times n$ or an $m\times (n - 1)$ submatrix, and the recursion terminates only when the reduced submatrix is a Youth tableau.\\
+    There are at most $m + n - 1 = O(m + n)$ iterations in $\textsc{Extract-Min-Recursion}$ because if an iteration does not return, it increases either $i$ or $j$ by $1$, that is, increases $i + j$ by $1$. The initial value of $i + j$ is $2$, and if $i + j = m + n$ at the beginning of an iteration, it must terminate in this iteration. Hence, the running time of $\textsc{Extract-Min}$ is $O(m + n)$.
+    \newpage
+    \item Show how to insert a new element into a nonfull $m \times n$ Young tableau in $O(m + n)$ time.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    If a Young tableau $Y$ is nonfull, then $Y[m, n] = \infty$ (See b.), which means there is no element of index $(m, n)$. So, we can safely set the new element $x$ to $Y[m, n]$.\\
+    \begin{algorithm}
+        \caption{$\textsc{Insert-Recursion}(Y, m, n, i, j)$}
+        \begin{algorithmic}[1]
+            \IF{$i > 1$ and $Y[i - 1, j] > Y[i, j]$}
+                \STATE $largest = 1$
+            \ELSE
+                \STATE $largest = 0$
+            \ENDIF
+            \IF{$j > 1$ and $Y[i, j - 1] > Y[i, j]$}
+                \STATE $largest = 2$
+            \ENDIF
+            \IF{$largest = 0$}
+                \RETURN
+            \ENDIF
+            \IF{$largest = 1$}
+                \STATE exchange $Y[i, j]$ with $Y[i - 1, j]$
+                \STATE $\textsc{Insert-Recursion}(Y, m, n, i - 1, j)$
+            \ELSE
+                \STATE exchange $Y[i, j]$ with $Y[i, j - 1]$
+                \STATE $\textsc{Insert-Recursion}(Y, m, n, i, j - 1)$
+            \ENDIF
+        \end{algorithmic}
+    \end{algorithm}
+    
+    \begin{algorithm}
+        \caption{$\textsc{Insert}(Y, m, n, x)$}
+        \begin{algorithmic}[1]
+            \STATE $Y[m, n] = x$
+            \STATE $\textsc{Insert-Recursion}(Y, m, n, m, n)$
+        \end{algorithmic}
+    \end{algorithm}
+    This algorithm is very similar to the one in c. and it has the same running time $O(m + n)$.
+    \vspace{1cm}
+    \item Using no other sorting method as a subroutine, show how to use an $n\times n$ Young tableau to sort $n^2$ numbers in $O(n^3)$ time.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    First, we initialize an $n\times n$ Youth tableau $Y$ with all entries $\infty$ (that is, an empty $n\times n$ matrix). Then, we call $\textsc{Insert}$ to insert all $n^2$ numbers into $Y$. Lastly, we call $\textsc{Extract-Min}$ to build the sorted array.\\
+    \begin{algorithm}
+        \caption{$\textsc{Young-Tableau-Sort}(A)$}
+        \begin{algorithmic}[1]
+            \FOR{$i = 1$ to $n^2$}
+                \STATE $Y[i] = \infty$
+            \ENDFOR
+            \FOR{$i = 1$ to $n^2$}
+                \STATE $\textsc{Insert}(Y, n, n, A[i])$
+            \ENDFOR
+            \FOR{$i = 1$ to $n^2$}
+                \STATE $A[i] = \textsc{Extract-Min}(Y, n, n)$
+            \ENDFOR
+        \end{algorithmic}
+    \end{algorithm}
+    \newpage Both $\textsc{Insert}(Y, n, n, A[i])$ and $\textsc{Extract-Min}(Y, n, n)$ takes $O(n + n) = O(n)$ time. Therefore, the running time of $\textsc{Young-Tableau-Sort}(A)$, where $A$ has size $n^2$, is $O(n^2O(n)) = O(n^3)$.
+    \vspace{1cm}
+    \item Give an $O(m + n)$-time algorithm to determine whether a given number is stored in a given $m\times n$ Young tableau.
+    \ifanswer
+    \noindent {\bf \\Solution}
+    The program starts from the upper right entry of the Young tableau $Y$, and eliminate either a row or a column from $Y$, depending on the relation between the upper right element and the given number.
+    \begin{algorithm}
+        \caption{$\textsc{Youth-Tableau-Search-Recursion}(Y, m, n, x, i, j)$}
+        \begin{algorithmic}[1]
+            \IF{$Y[i, j] == x$}
+                \RETURN \textbf{True}
+            \ENDIF
+            \IF{$i == m$ and $j == 1$}
+                \RETURN \textbf{False}
+            \ENDIF
+            \IF{$Y[i, j] < x$}
+                \RETURN $\textsc{Youth-Tableau-Search-Recursion}(Y, m, n, i + 1, j)$
+            \ELSE
+                \RETURN $\textsc{Youth-Tableau-Search-Recursion}(Y, m, n, i, j - 1)$
+            \ENDIF
+        \end{algorithmic}
+    \end{algorithm}
+    
+    \begin{algorithm}
+        \caption{$\textsc{Youth-Tableau-Search}(Y, m, n, x)$}
+        \begin{algorithmic}[1]
+            \STATE $\textsc{Youth-Tableau-Search-Recursion}(Y, m, n, x, 1, n)$
+        \end{algorithmic}
+    \end{algorithm}
+    \newpage
+    Since we eliminate a row or a column in each iteration of $\textsc{Youth-Tableau-Search}$-$\textsc{Recursion}$, there are $O(m + n)$ iterations before the given number is found (or unfound). Hence, the running time of $\textsc{Youth-Tableau-Search}$ is $O(m + n)$.
+\end{enumerate}
+\vspace{1cm}
+
+
+\end{enumerate}
+
+
+
+\end{document}
+
+
+
