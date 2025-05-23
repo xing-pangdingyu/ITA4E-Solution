@@ -1,0 +1,182 @@
+\documentclass[12pt,reqno]{amsart}
+%\documentclass[../Solutions_Introduction_to_Algorithms.tex]{subfiles}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest, tikz, xcolor}
+\usetikzlibrary{matrix, positioning}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 7.2}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item Use the substitution method to prove that the recurrence $T(n) = T(n - 1) + \Theta(n)$ has the solution $T(n) = \Theta(n^2)$, as claimed at the beginning of Section 7.2.
+
+\ifanswer
+\noindent {\bf Solution}
+Assume $T(k) = O(k^2)$ for $k < n$, therefore $T(n - 1) \leq c(n - 1)^2$. We have
+\begin{align*}
+    T(n) &= T(n - 1) + \Theta(n)\\
+    &\leq c(n - 1)^2 + \Theta(n)\\
+    &\leq cn^2 + (1 - cn) + (\Theta(n) - cn)\\
+    &\leq cn^2
+\end{align*}
+for sufficiently large $c$. So, $T(n) = O(n^2)$. On the other hand, assume $T(k) = \Omega(k^2)$ for $k < n$, therefore $T(n - 1) \geq d(n - 1)^2$. We have
+\begin{align*}
+    T(n) &= T(n - 1) + \Theta(n)\\
+    &\geq d(n - 1)^2 + \Theta(n)\\
+    &\geq dn^2 + (\Theta(n) - 2dn) + 1\\
+    &\geq dn^2
+\end{align*}
+for sufficiently small $d$. Hence, $T(n) = \Theta(n^2)$.
+\vspace{1cm}
+
+
+
+\item What is the running time of $\textsc{Quicksort}$ when all elements of array $A$ have the same value?
+
+\ifanswer
+\noindent {\bf Solution}
+If all elements of array $A$ have the same value, in Exercise 7.2-2 we have shown that each call of $\textsc{Partition}(A, p, r)$ produces one subproblem with $r - p$ elements and one with $0$ elements, that is, the worst-case. Hence, the running time of $\textsc{Quicksort}$ is the worst-case running time, which is $\Theta(n^2)$.
+\vspace{1cm}
+
+
+
+\item Show that the running time of $\textsc{Quicksort}$ is $\Theta(n^2)$ when the array $A$ contains distinct elements and is sorted in decreasing order.
+
+\ifanswer
+\noindent {\bf Solution}
+If the array $A$ contains distinct elements and is sorted in decreasing order, in each call of $\textsc{Partition}(A, p, r)$, $A[r]$ is strictly smaller than any other elements. Therefore, neither there will be any swaps of elements nor $i = 0$ will increase, and thus $q = i + 1 = 1$ is returned, and it produces one subproblem with $r - p$ elements and one with $0$ elements, which is also the worst-case. Hence, the running time of $\textsc{Quicksort}$ is $\Theta(n^2)$.
+\vspace{1cm}
+
+
+
+\item Banks often record transactions on an account in order of the times of the transactions, but many people like to receive their bank statements with checks listed in order by check number. People usually write checks in order by check number, and merchants usually cash them with reasonable dispatch. The problem of converting time-of-transaction ordering to check-number ordering is therefore the problem of sorting almost-sorted input. Explain persuasively why the procedure $\textsc{Insertion-Sort}$ might tend to beat the procedure $\textsc{Quicksort}$ on this problem.
+
+\ifanswer
+\noindent {\bf Solution}
+We will count the approximate numbers of assignments needed to sort an almost-sorted array $A$ with $\textsc{Insertion-Sort}$ and $\textsc{Quicksort}$. Note that the variables $c$ and $d$ appear below may depend on $n$, but with small coefficient.\\
+First, consider $\textsc{Insertion-Sort}$ (Recall the program in Section 2.1). In each of the $n - 1$ iterations of the \textbf{for} loop, there are at least $3$ assignments, together with a \textbf{while} loop with $2$ assignments per iteration. Since $A$ is almost sorted, the \textbf{while} loop is not likely to iterate many times, say $c$ time in average, where $c$ should be small. Thus, there are $(3 + 2c)(n - 1)$ assignments.\\
+Then, consider $\textsc{Quicksort}$. In each $\textsc{Partition}(A, p, r)$, there are at least $5$ assignments (including the $3$ iterations for the exchange of two elements), together with almost $4(r - p)$ assignments, because $x = A[r]$ is almost the largest element by assumption. We say there are $5 + 4(r - p - d)$ assignments, where d is small. It produces one subproblem with $r - p - d$ elements and one with $d$ elements. We ignore the latter one with $d$ elements because it is small. Therefore, the total number of assignments is approximately
+\begin{align*}
+&(5 + 4(n - 1 - d)) + (5 + 4(n - 1 - 2d)) + \cdots + (5 + 4(1))\\
+=\ &5\frac{n - 2}{d} + 4\frac{((n - d)(\frac{n - 2}{d}))}{2}\\
+=\ &\left(\frac{n - 2}{d}\right)(5 + 2(n - d)).
+\end{align*}
+By the assumption that $c$ and $d$ are small, and suppose $n$ is sufficiently large, we can safely say
+\begin{align*}
+\frac{n - 2}{d} &> (3 + 2c), \textup{ and}\\
+5 + 2(n - d) &> n - 1.
+\end{align*}
+Hence, we have
+$$
+\left(\frac{n - 2}{d}\right)(5 + 2(n - d)) > (3 + 2c)(n - 1),
+$$
+that is, $\textsc{Insertion-Sort}$ is likely to beat $\textsc{Quicksort}$ on this problem by costing less running time.
+\vspace{1cm}
+
+
+
+\item Suppose that the splits at every level of quicksort are in the constant proportion $\alpha$ to $\beta$, where $\alpha + \beta = 1$ and $0<\alpha\leq\beta<1$. Show that the minimum depth of a leaf in the recursion tree is approximately $\log_{1/\alpha}{n}$ and that the maximum depth is approximately $\log_{1/\beta}{n}$. (Don't worry about integer round-off.)
+
+\ifanswer
+\noindent {\bf Solution}
+The recursion tree is shown below:
+\begin{center}
+    \begin{forest}
+        for tree={
+              circle,
+              draw=none,
+              fill=none,
+              minimum size=0cm,
+              align=center,
+              edge+=-,
+              s sep=0.5cm,
+              l=1cm
+        }
+        [$n$
+            [$\alpha n$
+                [$\alpha^2 n$
+                    [$\alpha^3 n$
+                        [$\vdots$]
+                        [$\vdots$]
+                    ]
+                    [$\alpha^2\beta n$
+                        [$\vdots$]
+                        [$\vdots$]
+                    ]
+                ]
+                [$\alpha\beta n$
+                    [$\vdots$]
+                    [$\vdots$]
+                ]
+            ]
+            [$\beta n$
+                [$\beta\alpha n$
+                    [$\vdots$]
+                    [$\vdots$]
+                ]
+                [$\beta^2 n$
+                    [$\vdots$]
+                    [$\vdots$]
+                ]
+            ]
+        ]
+    \end{forest}
+\end{center}
+Since $\alpha\leq\beta$, in depth $d$ of the recursion tree, the smallest element is $\alpha^d n$ and the largest element is $\beta^d n$. Therefore, a leaf is of minimum depth when it is of the form $\alpha^d n$, and we need to find the smallest integer $d$ such that $\alpha^d n \leq 1$, that is,
+$$
+d_{min} = \lceil\log_{\alpha}{(1/n)}\rceil = \lceil\log_{1/\alpha}{n}\rceil \approx \log_{1/\alpha}{n}.
+$$
+On the other hand, a leaf is of maximum depth when it is of the form $\beta^d n$, and we need to find the smallest integer $d$ such that $\beta^d n \leq 1$, that is,
+$$
+d_{max} = \lceil\log_{\beta}{(1/n)}\rceil = \lceil\log_{1/\beta}{n}\rceil \approx \log_{1/\beta}{n}.
+$$
+\vspace{1cm}
+
+
+
+\item Consider an array with distinct elements and for which all permutations of the elements are equally likely. Argue that for any constant $0 < \alpha \leq 1/2$, the probability is approximately $1 - 2\alpha$ that $\textsc{Partition}$ produces a split at least as balanced as $1 - \alpha$ to $\alpha$.
+
+\ifanswer
+\noindent {\bf Solution}
+In the result array of $\textsc{Partition}(A, p, r)$, $A[r]$ is greater than all elements before, and less than all elements after, and the index of $A[r]$ is returned. Thus, the returned value of $\textsc{Partition}(A, p, r)$ is $q$ if and only if $A[r]$ is the $q$-th smallest element of the subarray. Suppose the subarray has $n$ elements, given the assumption that all permutations of the elements in this subarray are equally likely, $A[r]$ has equal probability to be the $1$-st to $n$-th smallest elements. Hence, $\textsc{Partition}(A, p, r)$ produces a split at least as balanced as $1 - \alpha$ to  $\alpha$ if and only if $A[r]$ is the $\alpha n$-th to $(1 - \alpha)n$-th smallest element, that is,
+$$
+probability = \frac{(1 - \alpha)n - \alpha n + 1}{(n - 1) + 1} = 1 - 2\alpha + 1/n \approx 1 - 2\alpha.
+$$
+\vspace{1cm}
+
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
