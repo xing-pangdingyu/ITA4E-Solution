@@ -1,0 +1,115 @@
+\documentclass[12pt,reqno]{amsart}
+%\documentclass[../Solutions_Introduction_to_Algorithms.tex]{subfiles}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest, tikz, xcolor}
+\usetikzlibrary{matrix, positioning}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 8.1}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item What is the smallest possible depth of a leaf in a decision tree for a comparison sort?
+
+\ifanswer
+\noindent {\bf Solution}
+We can think the decision tree as a construction of a total order (that is, every pair of elements is comparable) between $n$ elements. The root represents the comparison of two elements, which we call the ordered elements. In each of the following nodes, either a new element is related with the ordered elements, or two new elements are ordered separately from the ordered elements and we need another comparison to relate them to the ordered elements. Thus, there are at least $n - 1$ comparison needed to establish a total order between $n$ elements.
+\vspace{1cm}
+
+
+
+\item Obtain asymptotically tight bounds on $\lg{(n!)}$ without using Stirling's approximation. Instead, evaluate the summation $\sum_{k = 1}^n{\lg{k}}$ using techniques from Section A.2.
+
+\ifanswer
+\noindent {\bf Solution}
+First, we notice that
+$$
+\lg{(n!)} = \sum_{k = 1}^n{\lg{k}}.
+$$
+We aim to show its asymptotically tight bound is $\Theta(n\lg{n})$. The upper bound is trivial:
+$$
+\sum_{k = 1}^n{\lg{k}} \leq \sum_{k = 1}^n{\lg{n}} = n\lg{n} = O(n\lg{n}).
+$$
+For simplicity, we assume $n$ is even. By considering only half of the summation, the lower bound is shown:
+$$
+\sum_{k = 1}^n{\lg{k}} = \sum_{k = n/2}^n{\lg{(n/2)}} = (n/2)\lg{(n/2)} = \Omega(n\lg{n}).
+$$
+Hence, $\sum_{k = 1}^n{\lg{k}} = \Theta(n\lg{n})$. \qed
+\vspace{1cm}
+
+
+
+\item Show that there is no comparison sort whose running time is linear for at least half of the $n!$ inputs of length $n$. What about a fraction of $1/n$ of the inputs of length $n$? What about a fraction $1/2^n$?
+
+\ifanswer
+\noindent {\bf Solution}
+Suppose there is a comparison sort whose running time is linear for $kn!$ of the $n!$ inputs of length $n$. In the (binary) decision tree, there are at most $2^{cn}$ leaves of level $cn$. Therefore,
+$$
+kn! \leq 2^{cn}
+$$
+for all $n$, and for a constant $c$. Or, equivalently,
+$$
+kn! = O(2^n).
+$$
+Consider the cases:
+\begin{enumerate}[(i)]
+    \item $k = 1/2$. We have $$kn! = n!/2 = \Theta(n!) = \omega(2^n).$$
+    \item $k = 1/n$. We have $$kn! = (n - 1)! = \Theta(n!) = \omega(2^n).$$
+    \item $k = 1/2^n$. We have $$\lim_{n\to\infty}\frac{kn!}{2^n} = \lim_{n\to\infty}\frac{n!}{4^n} = \infty.$$ Thus, $kn! = \omega(2^n)$.
+\end{enumerate}
+In all cases, we have $kn! = \omega(2^n)$. Hence, no comparison sort has linear running time for $1/2$, $1/n$, or $1/2^n$ of the $n!$ inputs of length $n$.
+\vspace{1cm}
+
+
+
+\item You are given an $n$-element input sequence, and you know in advance that it is partly sorted in the following sense. Each element initially in position $i$ such that $i$ mod $4 = 0$ is either already in its correct position, or it is one place away from its correct position. For example, you know that after sorting, the element initially in position $12$ belongs in position $11$, $12$, or $13$. You have no advance information about the other elements, in positions $i$ where $i$ mod $4 \neq 0$. Show that an $\Omega(n\lg{n})$ lower bound on comparison based sorting still holds in this case.
+
+\ifanswer
+\noindent {\bf Solution}
+Let us count the number of permutations that satisfies the condition mentioned. There are approximately $n/4$ elements whose positions is divided by $4$, and therefore each of them has three possible positions after sorts. In total, there are approximately $3^{n/4}$ cases. There is no other restrictions, and other elements have approximately $(3n/4)!$ ways to permutate. Thus, the total number of permutations is approximately $3^{n/4}(3n/4)!$. Now, since each permutation must appear in at least one leaf, and the total number of leaves is at most $2^{h}$, we have
+$$
+3^{n/4}(3n/4)! \leq 2^h.
+$$
+Taking logarithms on both sides, we have
+\begin{align*}
+h &\geq \frac{\lg{3}}{4}n + \Theta((3n/4)\lg{(3n/4)})\\
+&= \Theta(n) + \Theta(n\lg{n})\\
+&= \Omega(n\lg{n}).
+\end{align*}
+\vspace{1cm}
+
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
