@@ -8,11 +8,14 @@ The goal of this project is to provide solutions to all exercises, problems, and
 
 ```
 ITA4E-Solutions/
-├── Chapter-01/
-│   ├── exercise_1_1.tex
-│   └── exercise_1_2.tex
-├── Chapter-02/
-│   └── exercise_2_1.tex
+├── Chapter_1/
+│   ├── C1_Solutions.pdf
+│   ├── Section_1.tex
+│   └── Section_2.tex
+├── Chapter_2/
+│   ├── C2_Solutions.pdf
+│   ├── Section_1.tex
+│   └── Section_2.tex
 └── README.md
 ```
 
@@ -30,17 +33,17 @@ ITA4E-Solutions/
 2. Navigate to the chapter folder of interest:
 
    ```bash
-   cd ITA4E-Solutions/Chapter-01
+   cd ITA4E-Solutions/Chapter_1
    ```
-3. Open any solution file (e.g., `exercise_1_1.tex`) and review the code and comments.
+3. Open the **PDF** file (e.g., `C1_Solutions.pdf`) to view the solutions. Open LaTex file only if you want to review the code and comments.
 
 ## Technologies Used
 
-* **Python 3.X**
+* **Python**
 * **LaTex**
 * **Linear Algebra**
 * **Graph Theory**
-* **Mathematical Analysis (Basic)**
+* **Basic Analysis Skills**
 
 ## Contributions
 
