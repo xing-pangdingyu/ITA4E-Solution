@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-The goal of this project is to provide solutions to all exercises, problems, and some notes from *Introduction to Algorithms, Fourth Edition* by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein. This project aims to help learners understand the concepts by providing clear, well-documented solutions to the exercises in the textbook.
+The goal of this project is to provide solutions to all exercises, problems, and some notes from *Introduction to Algorithms, Fourth Edition* by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein.
+
+By reading these exercises and answers, you will approach them with the perspective of an inquisitive and enthusiastic beginner, seeking to resolve uncertainties. There is no condescension toward simple questions from those with great knowledge, only a profound understanding of every detail, starting from the very beginning.
 
 ## Project Structure
 
