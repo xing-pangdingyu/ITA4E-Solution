@@ -1,0 +1,98 @@
+\documentclass[12pt,reqno]{amsart}
+%\documentclass[../Solutions_Introduction_to_Algorithms.tex]{subfiles}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest, tikz, xcolor}
+\usepackage{parskip}
+\usetikzlibrary{matrix, positioning}
+\usetikzlibrary{positioning,arrows.meta}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 3.1}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item Modify the lower-bound argument for insertion sort to handle input sizes that are not necessarily a multiple of $3$.
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+Based on Figure~3.1,
+\begin{itemize}
+    \item For $n = 3k$, each of the $k$ largest values moves through each of these $k$ positions to somewhere in these $k$ positions: $(n/3)(n/3) = n^2/9 = \Omega(n^2)$.
+    \item For $n = 3k + 1$, each of the $k$ largest values moves through each of these $k + 1$ positions to somewhere in these $k$ positions: $((n-1)/3)((n+2)/3) = n^2/9 + n/9 - 2/9 = \Omega(n^2)$.
+    \item For $n = 3k + 2$, each of the $k$ largest values moves through each of these $k + 2$ positions to somewhere in these $k$ positions: $((n-2)/3)((n+1)/3) = n^2/9 - n/9 - 2/9 = \Omega(n^2)$.
+\end{itemize}
+
+\vspace{1cm}
+
+
+
+\item Using reasoning similar to what we used for insertion sort, analyze the running time of the selection sort algorithm from Exercise~2.2-2.
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+The two \textbf{for} loops must be executed $(n-1)(n-1) = \Theta(n^2)$ times in any case. Therefore the running time of the selection sort is $\Theta(n^2)$.
+
+\vspace{1cm}
+
+
+
+\item Suppose that $\alpha$ is a fraction in the range $0 < \alpha < 1$. Show how to generalize
+the lower-bound argument for insertion sort to consider an input in which the $\alpha$
+largest values start in the first $\alpha n$ positions. What additional restriction do you
+need to put on $\alpha$? What value of $\alpha$ maximizes the number of times that the
+$\alpha$ largest values must pass through each of the middle $(1 - 2\alpha)n$ array positions?
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+Additional restriction: $\alpha < 1/2$.
+
+To maximize $T(n) = \alpha(1-2\alpha)n^2$, find the partial derivative: $$\frac{\partial T}{\partial\alpha} = (1-4\alpha)n^2,$$ which equals zero when $\alpha = 1/4$.
+
+\vspace{1cm}
+
+
+
+
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
