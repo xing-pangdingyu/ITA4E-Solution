@@ -1,0 +1,199 @@
+\documentclass[12pt,reqno]{amsart}
+%\documentclass[../Solutions_Introduction_to_Algorithms.tex]{subfiles}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest, tikz, xcolor}
+\usepackage{parskip}
+\usetikzlibrary{matrix, positioning}
+\usetikzlibrary{positioning,arrows.meta}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 3.3}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item Show that if $f(n)$ and $g(n)$ are monotonically increasing functions, then so are the functions $f(n) + g(n)$ and $f(g(n))$, and if $f(n)$ and $g(n)$ are in addition nonnegative, then $f(n)\cdot g(n)$ is monotonically increasing.
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\textit{Proof.}
+\begin{itemize}
+    \item If $m < n$, then $$(f+g)(m) = f(m) + g(m) \leq f(n) + g(n) = (f+g)(n).$$
+    \item If $m > n$, then $$(f\circ g)(m) = f(g(m)) \leq f(g(n)) = (f\circ g)(n).$$
+    \item Given that $f(n)$ and $g(n)$ are nonnegative, if $m > n$, then $$(fg)(m) = f(m) \cdot g(m) \leq f(n) \cdot g(n) = (fg)(n).$$
+\end{itemize}\qed
+
+\vspace{1cm}
+
+
+
+\item Prove that $\lfloor\alpha n\rfloor + \lceil(1-\alpha)n\rceil = n$ for any integer $n$ and real number $\alpha$ in the range $0\leq\alpha\leq 1$.
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\textit{Proof.}
+$$
+\lceil(1-\alpha)n\rceil = \lceil n-\alpha n\rceil = n + \lceil -\alpha n\rceil = n - \lfloor \alpha n\rfloor.
+$$
+\qed
+
+\vspace{1cm}
+
+
+
+\item Use equation (3.14) or other means to show that $(n + o(n))^k = \Theta(n^k)$
+for any real constant $k$. Conclude that $\lceil n\rceil^k = \Theta(n^k)$ and $\lfloor n\rfloor^k = \Theta(n^k).$
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\textit{Proof.} We only consider $k > 0$. Let $f(n)\in o(n)$. Then, there exists $n_0$ such that $$0 \leq f(n) < \frac{1}{k}n$$ for all $n \geq n_0$. Therefore, $$0 \leq (n + f(n))^k < (n + \frac{1}{k}n)^k = (1 + \frac{1}{k})^k n^k < en^k$$ for all $n \geq n_0$, which implies that $(n + f(n))^k = \Theta(n^k)$. \qed
+
+\vspace{1cm}
+
+
+
+\item Prove the following: \begin{enumerate}[a.] \item Equation (3.21). \item Equation (3.26)-(3.28). \item $\lg(\Theta(n)) = \Theta(\lg n)$. \end{enumerate}
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\begin{enumerate}[a.]
+\item \textit{Proof.} Let $d = \log_bc$, then $c = b^d$. Therefore, $$c^{\log_ba} = (b^d)^{\log_ba} = (b^{\log_ba})^d = a^d = a^{\log_bc}.$$ \qed
+\item \begin{itemize} \item \textit{Proof.} For any constant $c > 0$, take $n_0 = \lceil 1/c \rceil + 1$, it follows that $$0 \leq n! = \frac{n!}{n^n}n^n \leq \frac{1}{n}n^n < \frac{1}{\lceil\frac{1}{c}\rceil}n^n \leq cn^n$$ for all $n\geq n_0$. \qed \item \textit{Proof.} For any constant $c > 0$, take $n_0 = \lceil 4c \rceil + 1$, it follows that $$n! = \frac{n!}{2^n}\cdot 2^n \geq \frac{n}{2}\cdot\frac{1}{2}\cdot 2^n = \frac{n}{4}\cdot 2^n > \frac{\lceil 4c\rceil}{4}\cdot 2^n \geq c\cdot 2^n$$ for all $n\geq n_0$. \qed \item \textit{Proof.} Equation (3.26) implies $$\lg(n!) = O(\lg(n^n)) = O(n\lg n).$$ On the other hand, we have \begin{align*} \lg(n!) &= \lg\left(\sqrt{2\pi n}\left(\frac{n}{e}\right)^ne^{\alpha_n}\right),\text{ where }\frac{1}{12n + 1} < \alpha_n < \frac{1}{12n}.\\ &= \lg\sqrt{2\pi n} + n\lg n - n\lg e + \alpha_n\lg e\\ &= n\lg n - n\lg e\\ &\geq \frac{n}{2}\lg n + n\lg\sqrt{n} - n\lg e\\ &\geq \frac{n}{2}\lg n\end{align*} for all $n\geq 8$, which implies $\lg(n!) = \Omega(n\lg n)$. \qed \end{itemize}
+\item \textit{Proof.} Let $f(n) = \Theta(n)$. Take $c_1, c_2, n_0$ such that $0 \leq c_1n \leq f(n) \leq c_2n$ for all $n \geq n_0$. Take logarithm on all sides, we get $$\lg c_1 + \lg n \leq \lg(f(n)) \leq \lg c_2 + \lg n.$$ For all $n \geq c_1^{-2}$, we have $\lg n \geq -2\lg c$, therefore $\lg c \geq -(1/2)\lg n$. On the other hand, for all $n \geq c_2$, we have $\lg c_2 \leq \lg n$. Hence, $$0 \leq \frac{1}{2}\lg n \leq \lg(f(n)) \leq 2\lg n$$ for all $n\geq\max{\{n_0, c_1^{-2}, c_2\}}$. \qed
+\end{enumerate}
+
+\vspace{1cm}
+
+
+
+\item Is the function $\lceil \lg n \rceil!$ polynomially bounded?\, Is the function $\lceil \lg\lg n\rceil!$ polynomially bounded?
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+There is an obvious equivalence: $f(n)$ is polynomially bounded if and only if $\lg(f(n)) = O(\lg n)$.
+\begin{itemize}
+\item $\lceil \lg n \rceil!$ is not polynomially bounded because $$\lceil \lg n \rceil! = \Theta(\lg n \lg\lg n) = \omega(\lg n).$$
+\item $\lceil \lg\lg n\rceil!$ is polynomially bounded because $$\lceil \lg\lg n\rceil! = \Theta(\lg\lg n \lg\lg\lg n) = O((\lg\lg n)^2) = O(\lg n).$$
+\end{itemize}
+
+\vspace{1cm}
+
+
+
+\item Which is asymptotically larger: $\lg(\lg^*n)$ or $\lg^*(\lg n)$?
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+$\lg^*(\lg n)$ is asymptotically larger because $$\lg^*(\lg n) = \lg^*n - 1 = \Theta(\lg^*n) = \omega(\lg(\lg^*n)).$$
+
+\vspace{1cm}
+
+
+
+\item Show that the golden ratio $\phi$ and its conjugate $\hat{\phi}$ both satisfy the equation $x^2 = x + 1$.
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+$$
+\phi^2
+= \left( \frac{1 + \sqrt{5}}{2} \right)^2
+= \frac{6 + 2\sqrt{5}}{4}
+= 1 + \frac{1 + \sqrt{5}}{2}
+= 1 + \phi.
+$$
+
+$$
+\hat{\phi}^{\,2}
+= \left( \frac{1 - \sqrt{5}}{2} \right)^2
+= \frac{6 - 2\sqrt{5}}{4}
+= 1 + \frac{1 - \sqrt{5}}{2}
+= 1 + \hat{\phi}.
+$$
+
+\vspace{1cm}
+
+
+
+\item Prove by induction that the $i$th Fibonacci number satisfies the equation $$F_i = (\phi^i - \hat{\phi}^i)/\sqrt{5},$$ where $\phi$ is the golden ratio and $\hat{\phi}$ is its conjugate.
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\textit{Proof.}
+\begin{itemize}
+\item Base case: $(\phi^0 - \hat{\phi}^0)/\sqrt{5} = 0 = F_0,\quad (\phi^1 - \hat{\phi}^1)/\sqrt{5} = 1 = F_0$
+\item Inductive step: Assume that the equation holds for $i = k$ and $i = k + 1$. Then, \begin{align*} F_{k+2} &= F_k + F_{k+1}\\ &= \frac{\phi^k - \hat{\phi}^k}{\sqrt{5}} + \frac{\phi^{k+1} - \hat{\phi}^{k+1}}{\sqrt{5}}\\ &= \phi^{k}\frac{1 + \phi}{\sqrt{5}} - \hat{\phi^{k}}\frac{1 + \hat{\phi}}{\sqrt{5}}\\ &= \phi^{k}\frac{\phi^2}{\sqrt{5}} - \hat{\phi^{k}}\frac{\hat{\phi}^2}{\sqrt{5}}\\ &= \frac{\phi^{k+2} - \hat{\phi}^{k+2}}{\sqrt{5}}. \end{align*} \qed
+\end{itemize}
+
+\vspace{1cm}
+
+
+
+\item Show that $k\lg k = \Theta(n)$ implies $k = \Theta(n/\lg n)$.
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\textit{Proof.} Using the property of Exercise~3.3-4(c), it follows that $$\lg k + \lg\lg k = \lg(k\lg k) = \lg(\Theta(n)) = \Theta(\lg n).$$ Since $\lg\lg k = o(\lg k)$, we have $\lg k = \Theta(\lg n)$. Therefore, $$k = \frac{k\lg k}{\lg k} = \frac{\Theta(n)}{\Theta(\lg n)} = \Theta(n/\lg n).$$ \qed
+
+\vspace{1cm}
+
+
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
