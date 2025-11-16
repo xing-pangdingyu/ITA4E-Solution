@@ -1,0 +1,171 @@
+\documentclass[12pt,reqno]{amsart}
+%\documentclass[../Solutions_Introduction_to_Algorithms.tex]{subfiles}
+\usepackage{amsmath,amsfonts,amscd,amssymb,epsf,color,enumerate,graphicx,url}
+\usepackage{algorithm, algorithmic}
+\usepackage{forest, tikz, xcolor}
+\usepackage{parskip}
+\usetikzlibrary{matrix, positioning}
+\usetikzlibrary{positioning,arrows.meta}
+\setlength{\oddsidemargin}{-0.2in}%
+\setlength{\evensidemargin}{-0.2in}%
+\setlength{\textwidth}{6.6in}%
+\setlength{\topmargin}{-0.5in}%
+ \setlength{\textheight}{9.5in}%
+ \definecolor{orange}{rgb}{1,0.5,0}
+ \pagestyle{plain}
+\linespread{1.3}
+\usepackage[small]{caption}
+\newcommand{\pa}{\partial}
+\newcommand{\va}{\vspace{0.4cm}}
+\newcommand{\di}{\displaystyle}
+\newcommand{\disp}{\displaystyle}
+
+
+% turn on \answertrue to show the solution
+% turn on \answerfalse to hide the solution
+\newif\ifanswer
+\answertrue
+%\answerfalse
+
+
+
+\begin{document}
+\noindent {\footnotesize Introduction to Algorithms}\hspace{10.5cm} {\footnotesize Solutions}
+
+\vspace{0.5cm}
+\hspace{5.5cm}\textbf{\large Exercises in Section 4.1}
+\vspace{0.5cm}
+
+\begin{enumerate}[1.]
+
+\item Generalize \textsc{Matrix-Multiply-Recursive} to multiply $n \times n$ matrices for which
+$n$ is not necessarily an exact power of $2$. Give a recurrence describing its running
+time. Argue that it runs in $\Theta(n^3)$ time in the worst case.
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\begin{algorithm}
+    \caption{\textsc{Matrix-Multiply-Recursive-Modified}$(A, B, C, n)$}
+    \begin{algorithmic}[1]
+        \STATE find the smallest integer $k$ such that $n \leq 2^k$
+        \IF{$n \neq 2^k$}
+            \STATE create $2^k \times 2^k$ matrices $A'$ and $B'$, whose top-left
+            \STATE $n \times n$ submatrices are copies of $A$ and $B$, respectively;
+            \STATE and whose other entries are set to $0$.
+            \RETURN
+        \ELSE
+            \STATE $A' = A$ and $B' = B$
+        \ENDIF
+        \STATE \textsc{Matrix-Multiply-Recursive}$(A', B', C, n)$
+    \end{algorithmic}
+\end{algorithm}
+
+Denote $T(n)$ as the running time of \textsc{Matrix-Multiply-Recursive}$(A, B, C, n)$, the running time $T'(n)$ of \textsc{Matrix-Multiply-Recursive-Modified}$(A, B, C, n)$ is between $T(n)$ and $T(2n)$. Since $$T(2n) = \Theta((2n)^3) = \Theta(n^3) = T(n),$$ we conclude that $T'(n) = \Theta(n^3)$.
+
+\vspace{1cm}
+
+
+
+\item How quickly can you multiply a $kn \times n$ matrix ($kn$ rows and $n$ columns) by an
+$n \times kn$ matrix, where $k \geq 1$, using \textsc{Matrix-Multiply-Recursive} as a subroutine?
+Answer the same question for multiplying an $n \times kn$ matrix by a $kn \times n$
+matrix. Which is asymptotically faster, and by how much?
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+Consider the case $n = 3$. Let $A$ be a $kn \times n$ matrix, and $B$ be a $n \times kn$ matrix. Then, divide $A$ and $B$ into $k$ submatrices of size $n \times n$. Multiply $A$ by $B$:
+$$
+\begin{bmatrix}
+A_1 \\[6pt]
+A_2 \\[6pt]
+A_3
+\end{bmatrix}
+\;
+\begin{bmatrix}
+B_1 & B_2 & B_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+A_1B_1 & A_1B_2 & A_1B_3 \\[6pt]
+A_2B_1 & A_2B_2 & A_2B_3 \\[6pt]
+A_3B_1 & A_3B_2 & A_3B_3
+\end{bmatrix}.
+$$
+As we can see, there requires $k^2$ multiplications, and each of them can be solved in $\Theta(n^3)$ time. Therefore, the total running time is $\Theta(k^2n^3)$.
+
+When multiplying an $n \times kn$ matrix by a $kn \times n$ matrix, we would have
+$$
+\begin{bmatrix}
+A_1 & A_2 & A_3
+\end{bmatrix}
+\;
+\begin{bmatrix}
+B_1 \\[6pt]
+B_2 \\[6pt]
+B_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+A_1B_1 + A_2B_2 +A_3B_3
+\end{bmatrix}.
+$$
+In this case, there requires only $k$ multiplications. Therefore, the total running time is $\Theta(kn^3)$.
+
+\vspace{1cm}
+
+
+
+\item Suppose that instead of partitioning matrices by index calculation in \textsc{Matrix-Multiply-Recursive},
+you copy the appropriate elements of $A$, $B$, and $C$ into separate $\dfrac{n}{2}\times\dfrac{n}{2}$
+submatrices $A_{11},A_{12},A_{21},A_{22}$; $B_{11},B_{12},B_{21},B_{22}$; and
+$C_{11},C_{12},C_{21},C_{22}$, respectively. After the recursive calls, you copy the results
+from $C_{11},C_{12},C_{21},C_{22}$ back into the appropriate places in $C$. How does
+recurrence (4.9) change, and what is its solution?
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+If so, the partitioning time will become $\Theta(n^2)$ instead of $\Theta(1)$. The recurrence (4.9) would be $$T(n) = 8T(n/2) + \Theta(n^2).$$ Using the master method, we have the solution remaining $T(n) = \Theta(n^3)$.
+
+\vspace{1cm}
+
+
+
+\item Write pseudocode for a divide-and-conquer algorithm \textsc{Matrix-Add-Recursive}
+that sums two $n\times n$ matrices $A$ and $B$ by partitioning each of them into four
+$\dfrac{n}{2}\times\dfrac{n}{2}$ submatrices and then recursively summing corresponding
+pairs of submatrices. Assume that matrix partitioning uses $\Theta(1)$-time index
+calculations. Write a recurrence for the worst-case running time of
+\textsc{Matrix-Add-Recursive}, and solve your recurrence. What happens if you use
+$\Theta(n^2)$-time copying to implement the partitioning instead of index calculations?
+
+\vspace{0.5cm}
+
+\ifanswer
+\noindent {\bf Solution}
+
+\begin{itemize}
+\item Recurrence using index calculations: $$T(n) = 4T(n/2) + \Theta(1).$$ Using the master method, the solution is $T(n) = \Theta(n^2)$.
+\item Recurrence using copying: $$T(n) = 4T(n/2) + \Theta(n^2).$$ Using the master method, the solution is $T(n) = \Theta(n^2\lg n)$.
+\end{itemize}
+
+\vspace{1cm}
+
+
+
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
